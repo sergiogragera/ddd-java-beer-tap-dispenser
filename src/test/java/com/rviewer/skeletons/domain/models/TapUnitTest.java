@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyClosedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
@@ -98,7 +100,7 @@ public class TapUnitTest {
     }
 
     @Test
-    public void openTapWithNullDateShouldReturnTapWithSameStatus() {
+    public void openTaShouldReturnTapWithSameStatusWhenNullDateArg () {
       final var dispenser = new Dispenser(1, 0.5f);
       final var tap = new Tap(1, dispenser);
       final var openedTap = new Tap(1, dispenser, LocalDateTime.now());
@@ -142,7 +144,7 @@ public class TapUnitTest {
     }
 
     @Test
-    public void closeTapWithNullDateShouldReturnTapWithSameStatus() {
+    public void closeTapShouldReturnTapWithSameStatusWhenNullDateArg() {
       final var dispenser = new Dispenser(1, 0.5f);
       final var tap = new Tap(1, dispenser);
       final var openedTap = new Tap(1, dispenser, LocalDateTime.now());
@@ -159,5 +161,24 @@ public class TapUnitTest {
       assertFalse(tap.isOpened());
       assertTrue(openedTap.isOpened());
       assertFalse(closedTap.isOpened());
+    }
+
+    @Test
+    public void calculeTapLitersSpendShouldReturnPositiveNumberWhenTapIsOpened() {
+      final var dispenser = new Dispenser(1, 0.5f);
+      final var openedTap = new Tap(1, dispenser, LocalDateTime.now().minus(10, ChronoUnit.SECONDS));
+      
+      assertTrue(openedTap.isOpened());
+      assertTrue(openedTap.getLitersDispensed() > 0);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"0.3,0", "0.5,10", "0.2,2", "0.01,25"})
+    public void calculeTapLitersSpendShouldReturnExactLitersWhenTapIsClosed(float flowVolume, int seconds) {
+      final var dispenser = new Dispenser(1, flowVolume);
+      final var closedTap = new Tap(1, dispenser, LocalDateTime.now().minus(seconds, ChronoUnit.SECONDS), LocalDateTime.now());
+      
+      assertFalse(closedTap.isOpened());
+      assertEquals(flowVolume * seconds, closedTap.getLitersDispensed());
     }
 }
