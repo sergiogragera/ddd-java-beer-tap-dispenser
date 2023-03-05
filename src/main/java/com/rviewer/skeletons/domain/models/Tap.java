@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
+import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
+import com.rviewer.skeletons.domain.exceptions.InvalidDateRangeException;
+
 import lombok.Getter;
 
 public class Tap {
@@ -55,7 +58,7 @@ public class Tap {
                 throw new RuntimeException();
             }
             else if (!date.get().isAfter(this.openedAt.get())) {
-                throw new RuntimeException();
+                throw new InvalidArgumentException("close date before open");
             }
             this.closedAt = date;
         }
