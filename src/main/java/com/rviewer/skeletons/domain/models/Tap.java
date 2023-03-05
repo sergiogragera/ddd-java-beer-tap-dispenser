@@ -4,14 +4,16 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
+import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyClosedException;
+import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
+import com.rviewer.skeletons.domain.exceptions.DispenserNotOpenYetException;
 import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
-import com.rviewer.skeletons.domain.exceptions.InvalidDateRangeException;
 
 import lombok.Getter;
 
 public class Tap {
     @Getter
-    private int id;
+    private Id id;
     private Optional<LocalDateTime> openedAt = Optional.ofNullable(null);
     private Optional<LocalDateTime> closedAt = Optional.ofNullable(null);
     @Getter
@@ -26,41 +28,41 @@ public class Tap {
     }
 
     public Tap(int id,Dispenser dispenser, LocalDateTime openedAt, LocalDateTime closedAt) {
-        this.id = id;
+        this.id = new Id(id);
         if (dispenser == null) {
-            throw new RuntimeException();
+            throw new NullPointerException();
         }
         this.dispenser = dispenser;
 
-        this.open(Optional.ofNullable(openedAt));
-        this.close(Optional.ofNullable(closedAt));
+        this.open(openedAt);
+        this.close(closedAt);
     }
 
     public boolean isOpened() {
         return this.openedAt.isPresent() && !this.closedAt.isPresent();
     }
 
-    public void open(Optional<LocalDateTime> date) {
-        if (date.isPresent()) {
+    public void open(LocalDateTime date) {
+        if (date != null) {
             if (this.openedAt.isPresent()) {
-                throw new RuntimeException();
+                throw new DispenserAlreadyOpenedException();
             }
-            this.openedAt = date;
+            this.openedAt = Optional.of(date);
         }
     }
 
-    public void close(Optional<LocalDateTime> date) {
-        if (date.isPresent()) {
+    public void close(LocalDateTime date) {
+        if (date != null) {
             if (this.closedAt.isPresent()) {
-                throw new RuntimeException();
+                throw new DispenserAlreadyClosedException();
             }
             else if (!this.openedAt.isPresent()) {
-                throw new RuntimeException();
+                throw new DispenserNotOpenYetException();
             }
-            else if (!date.get().isAfter(this.openedAt.get())) {
+            else if (!date.isAfter(this.openedAt.get())) {
                 throw new InvalidArgumentException("close date before open");
             }
-            this.closedAt = date;
+            this.closedAt = Optional.of(date);
         }
     }
 

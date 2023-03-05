@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class Dispenser {
-    private int id;
+    private Id id;
     private LocalDate createdAt = LocalDate.now();
     private float flowVolume;
 
@@ -14,7 +14,7 @@ public class Dispenser {
     }
 
     public Dispenser(int id, float flowVolume, LocalDate createdAt) {
-        this.id = id;
+        this.id = new Id(id);
         if (flowVolume <= 0) {
             throw new RuntimeException();
         }
