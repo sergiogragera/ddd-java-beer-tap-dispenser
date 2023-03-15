@@ -15,20 +15,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class PingControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-    @Test
-    public void getPing_success() throws Exception {
-        mockMvc
-                .perform(get("/ping"))
-                .andExpect(status().isOk());
-    }
+  @Test
+  public void getPing_success() throws Exception {
+    mockMvc.perform(get("/ping")).andExpect(status().isOk());
+  }
 
-    @Test
-    public void getPing_returnsPong() throws Exception {
-        mockMvc
-                .perform(get("/ping"))
-                .andExpect(content().string(containsString("pong")));
-    }
+  @Test
+  public void getPing_returnsPong() throws Exception {
+    mockMvc.perform(get("/ping")).andExpect(content().string(containsString("pong")));
+  }
 }

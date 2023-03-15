@@ -8,8 +8,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class UsageResponse {
-    private LocalDateTime openedAt;
-    private LocalDateTime closedAt;
-    private float flowVolume;
-    private float totalSpend;
+  private LocalDateTime openedAt;
+  private LocalDateTime closedAt;
+  private float flowVolume;
+  private float totalSpend;
 }

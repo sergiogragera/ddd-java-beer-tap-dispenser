@@ -10,6 +10,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class DispenserRequest {
-    @JsonProperty("flow_volume")
-    private float flowVolume;
+  @JsonProperty("flow_volume")
+  private float flowVolume;
 }

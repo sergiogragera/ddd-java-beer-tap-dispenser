@@ -13,25 +13,24 @@ import com.rviewer.skeletons.infrastructure.persistence.jpa.DispenserEntityJpaRe
 
 @Repository
 public class DispenserEntityRepository implements DispenserRepository {
-    private final DispenserEntityJpaRepository dispenserRepository;
+  private final DispenserEntityJpaRepository dispenserRepository;
 
-    @Autowired
-    public DispenserEntityRepository(DispenserEntityJpaRepository dispenserEntityJpaRepository) {
-      this.dispenserRepository = dispenserEntityJpaRepository;
-    }
+  @Autowired
+  public DispenserEntityRepository(DispenserEntityJpaRepository dispenserEntityJpaRepository) {
+    this.dispenserRepository = dispenserEntityJpaRepository;
+  }
 
-    @Override
-    public Optional<Dispenser> save(DispenserRequest dispenser) {
-        DispenserEntity dispenserEntity = new DispenserEntity(dispenser.getFlowVolume());
-        dispenserEntity = dispenserRepository.save(dispenserEntity);
+  @Override
+  public Optional<Dispenser> save(DispenserRequest dispenser) {
+    DispenserEntity dispenserEntity = new DispenserEntity(dispenser.getFlowVolume());
+    dispenserEntity = dispenserRepository.save(dispenserEntity);
 
-        return Optional.of(new Dispenser(dispenserEntity.getId(), dispenserEntity.getFlowVolume()));
-    }
+    return Optional.of(new Dispenser(dispenserEntity.getId(), dispenserEntity.getFlowVolume()));
+  }
 
-    @Override
-    public Optional<Dispenser> findById(int id) {
-        Optional<DispenserEntity> entity = dispenserRepository.findById(id);
-        return Optional.of(new Dispenser(entity.get().getId(), entity.get().getFlowVolume()));
-    }
-    
+  @Override
+  public Optional<Dispenser> findById(int id) {
+    Optional<DispenserEntity> entity = dispenserRepository.findById(id);
+    return Optional.of(new Dispenser(entity.get().getId(), entity.get().getFlowVolume()));
+  }
 }

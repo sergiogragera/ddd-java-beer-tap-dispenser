@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 public class PongResponse {
 
-    private String message;
-    private int number;
+  private String message;
+  private int number;
 }

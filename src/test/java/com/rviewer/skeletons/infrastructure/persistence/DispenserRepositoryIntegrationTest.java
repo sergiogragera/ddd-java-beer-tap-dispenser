@@ -17,7 +17,9 @@ import com.rviewer.skeletons.domain.persistence.DispenserRepository;
 import com.rviewer.skeletons.infrastructure.persistence.entities.DispenserEntity;
 
 @AutoConfigureTestEntityManager
-@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
+@DataJpaTest(
+    includeFilters =
+        @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class))
 public class DispenserRepositoryIntegrationTest {
 
   @Autowired private TestEntityManager entityManager;
@@ -28,7 +30,8 @@ public class DispenserRepositoryIntegrationTest {
     final var dispenser = dispenserEntityRepository.save(new DispenserRequest(0.4f));
     assertTrue(dispenser.isPresent());
 
-    final var dispenserEntity = entityManager.find(DispenserEntity.class, dispenser.get().getId().getValue());
+    final var dispenserEntity =
+        entityManager.find(DispenserEntity.class, dispenser.get().getId().getValue());
     assertEquals(0.4f, dispenserEntity.getFlowVolume());
   }
 

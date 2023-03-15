@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class SpendingResponse {
-    private List<UsageResponse> usages = Arrays.asList();
+  private List<UsageResponse> usages = Arrays.asList();
 
-    public float getAmount() {
-        return usages.stream().map(UsageResponse::getFlowVolume).reduce(0f, Float::sum);
-    }
+  public float getAmount() {
+    return usages.stream().map(UsageResponse::getFlowVolume).reduce(0f, Float::sum);
+  }
 }
