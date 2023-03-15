@@ -1,13 +1,11 @@
 package com.rviewer.skeletons.domain.models;
 
-import java.time.LocalDateTime;
-
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyClosedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
 import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
 import com.rviewer.skeletons.domain.models.valueobjects.Id;
 import com.rviewer.skeletons.domain.models.valueobjects.Status;
-
+import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter

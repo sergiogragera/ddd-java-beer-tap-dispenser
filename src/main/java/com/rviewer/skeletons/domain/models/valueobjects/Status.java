@@ -1,10 +1,8 @@
 package com.rviewer.skeletons.domain.models.valueobjects;
 
+import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-
-import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
-
 import lombok.Getter;
 
 public class Status {

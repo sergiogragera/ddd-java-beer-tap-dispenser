@@ -3,6 +3,9 @@ package com.rviewer.skeletons.infrastructure.persistence;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.rviewer.skeletons.domain.dtos.DispenserRequest;
+import com.rviewer.skeletons.domain.persistence.DispenserRepository;
+import com.rviewer.skeletons.infrastructure.persistence.entities.DispenserEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
@@ -11,10 +14,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Repository;
-
-import com.rviewer.skeletons.domain.dtos.DispenserRequest;
-import com.rviewer.skeletons.domain.persistence.DispenserRepository;
-import com.rviewer.skeletons.infrastructure.persistence.entities.DispenserEntity;
 
 @AutoConfigureTestEntityManager
 @DataJpaTest(

@@ -1,11 +1,5 @@
 package com.rviewer.skeletons.application.services;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.rviewer.skeletons.domain.dtos.DispenserRequest;
 import com.rviewer.skeletons.domain.dtos.DispenserResponse;
 import com.rviewer.skeletons.domain.dtos.SpendingResponse;
@@ -13,6 +7,10 @@ import com.rviewer.skeletons.domain.dtos.UsageResponse;
 import com.rviewer.skeletons.domain.models.Dispenser;
 import com.rviewer.skeletons.domain.models.valueobjects.Status;
 import com.rviewer.skeletons.domain.persistence.DispenserRepository;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DispenserService {

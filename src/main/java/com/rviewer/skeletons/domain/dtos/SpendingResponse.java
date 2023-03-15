@@ -2,7 +2,6 @@ package com.rviewer.skeletons.domain.dtos;
 
 import java.util.Arrays;
 import java.util.List;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
