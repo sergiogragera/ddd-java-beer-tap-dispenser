@@ -4,8 +4,8 @@ public class Id {
   private int value;
 
   public Id(int value) {
-    if (value < 1) {
-      throw new IllegalArgumentException("invalid id: must be positive number");
+    if (value < 0) {
+      throw new IllegalArgumentException("invalid id: must be greater or queal than zero");
     }
 
     this.value = value;
