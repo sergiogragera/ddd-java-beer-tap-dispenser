@@ -7,7 +7,9 @@ import com.rviewer.skeletons.domain.dtos.UsageResponse;
 import com.rviewer.skeletons.domain.models.Dispenser;
 import com.rviewer.skeletons.domain.models.valueobjects.Status;
 import com.rviewer.skeletons.domain.persistence.DispenserRepository;
+import com.rviewer.skeletons.domain.persistence.UsageRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,9 +17,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class DispenserService {
   @Autowired DispenserRepository dispenserRepository;
+  @Autowired UsageRepository usageRepository;
 
   public DispenserResponse create(DispenserRequest dispenserRequest) {
-    Optional<Dispenser> dispenserSaved = dispenserRepository.save(dispenserRequest);
+    Optional<Dispenser> dispenserSaved =
+        dispenserRepository.save(new Dispenser(dispenserRequest.getFlowVolume()));
     return dispenserSaved
         .map(
             dispenser ->
@@ -29,9 +33,8 @@ public class DispenserService {
     Optional<Dispenser> dispenserById = dispenserRepository.findById(id);
     dispenserById.ifPresentOrElse(
         dispenser -> {
-          // TODO: find last closed usage date equals zero
           dispenser.open(date);
-          // TODO: save usage
+          dispenserRepository.save(dispenser);
         },
         () -> {
           throw new RuntimeException();
@@ -43,7 +46,8 @@ public class DispenserService {
     dispenserById.ifPresentOrElse(
         dispenser -> {
           dispenser.close(date);
-          // TODO: save usage
+          dispenserRepository.save(dispenser);
+          usageRepository.save(dispenser);
         },
         () -> {
           throw new RuntimeException();
@@ -56,22 +60,17 @@ public class DispenserService {
     Optional<Dispenser> dispenserById = this.dispenserRepository.findById(id);
     dispenserById.ifPresentOrElse(
         dispenser -> {
-          // TODO: findUsagesByDispenser
+          List<UsageResponse> usages = usageRepository.findByDispenserId(id);
           if (dispenser.getStatus().isOpened()) {
             Status dispenserStatus = dispenser.getStatus();
-            spending
-                .getUsages()
-                .add(
-                    new UsageResponse(
-                        dispenserStatus.getOpenedAt(),
-                        dispenserStatus
-                            .getOpenedAt()
-                            .plusSeconds((long) dispenserStatus.getSecondsOpened()),
-                        dispenser.getFlowVolume(),
-                        dispenser.getLitersDispensed()
-                            * 12 // FIXME: add getAmount in domain aggregate
-                        ));
+            usages.add(
+                new UsageResponse(
+                    dispenserStatus.getOpenedAt(),
+                    null,
+                    dispenser.getFlowVolume(),
+                    dispenser.getTotalSpent()));
           }
+          spending.getUsages().addAll(usages);
         },
         () -> {
           throw new RuntimeException("dispenser not found");
