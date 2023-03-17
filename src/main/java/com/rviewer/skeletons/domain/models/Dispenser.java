@@ -10,10 +10,16 @@ import lombok.Getter;
 
 @Getter
 public class Dispenser {
+  private final float pricereference = 12.25f;
+
   private Id id;
   private LocalDateTime createdAt = LocalDateTime.now();
   private float flowVolume;
   private Status status = new Status();
+
+  public Dispenser(float flowVolume) {
+    this(0, flowVolume, null, null);
+  }
 
   public Dispenser(int id, float flowVolume) {
     this(id, flowVolume, null, null);
@@ -57,5 +63,9 @@ public class Dispenser {
 
   public float getLitersDispensed() {
     return this.status.getSecondsOpened() * this.flowVolume;
+  }
+
+  public float getTotalSpent() {
+    return this.getLitersDispensed() * pricereference;
   }
 }
