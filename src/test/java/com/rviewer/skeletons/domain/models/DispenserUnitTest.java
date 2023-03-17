@@ -16,11 +16,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 public class DispenserUnitTest {
   @Test
-  public void itShouldThrowIllegalArgumentExceptionWheIdArgIsNotPositiveNumber() {
+  public void itShouldThrowIllegalArgumentExceptionWheIdArgIsNegativeNumber() {
     assertThrows(
         IllegalArgumentException.class,
         () -> {
-          new Dispenser(0, 0.5f);
+          new Dispenser(-1, 0.5f);
         });
   }
 
