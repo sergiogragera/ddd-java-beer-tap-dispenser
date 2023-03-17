@@ -7,7 +7,7 @@ import lombok.Getter;
 
 public class Status {
   @Getter private LocalDateTime openedAt;
-  private LocalDateTime closedAt;
+  @Getter private LocalDateTime closedAt;
 
   public Status() {
     this(null);
