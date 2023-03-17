@@ -4,6 +4,8 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,7 +24,9 @@ import lombok.Setter;
 @Setter
 @Getter
 public class UsageEntity {
-  @Id private int id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private int id;
 
   @Temporal(TemporalType.TIMESTAMP)
   @Column
@@ -40,8 +44,7 @@ public class UsageEntity {
   @JoinColumn(name = "dispenser_id", nullable = false)
   private DispenserEntity dispenser;
 
-  public UsageEntity(int id, DispenserEntity dispenser) {
-    this.id = id;
-    this.dispenser = dispenser;
+  public UsageEntity(int dispenserId) {
+    this.dispenser = new DispenserEntity(dispenserId);
   }
 }

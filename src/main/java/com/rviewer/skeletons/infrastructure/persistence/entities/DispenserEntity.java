@@ -36,6 +36,11 @@ public class DispenserEntity {
   @Column private float flowVolume;
 
   public DispenserEntity(float flowVolume) {
+    this(0, flowVolume);
+  }
+
+  public DispenserEntity(int id, float flowVolume) {
+    this.id = id;
     this.flowVolume = flowVolume;
   }
 }
