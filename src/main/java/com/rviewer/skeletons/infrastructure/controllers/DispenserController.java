@@ -11,6 +11,7 @@ import java.util.UUID;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,6 +38,11 @@ public class DispenserController {
     } else {
       dispenserService.close(id, statusRequest.getUpdatedAt());
     }
-    return dispenserService.getUsages(id);
+    return dispenserService.getSpendings(id);
+  }
+
+  @GetMapping("/{id}/spendings")
+  public SpendingResponse getSpendingsDispenser(@PathVariable UUID id) {
+    return dispenserService.getSpendings(id);
   }
 }

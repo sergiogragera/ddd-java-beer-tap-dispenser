@@ -55,7 +55,7 @@ public class DispenserService {
         });
   }
 
-  public SpendingResponse getUsages(UUID id) {
+  public SpendingResponse getSpendings(UUID id) {
     List<UsageResponse> usagesResponse = new ArrayList<>();
 
     Optional<Dispenser> dispenserById = this.dispenserRepository.findById(id);
