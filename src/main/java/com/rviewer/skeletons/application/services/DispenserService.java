@@ -1,16 +1,21 @@
 package com.rviewer.skeletons.application.services;
 
-import com.rviewer.skeletons.domain.dtos.DispenserRequest;
-import com.rviewer.skeletons.domain.dtos.DispenserResponse;
-import com.rviewer.skeletons.domain.dtos.SpendingResponse;
-import com.rviewer.skeletons.domain.dtos.UsageResponse;
+import com.rviewer.skeletons.domain.dtos.request.DispenserRequest;
+import com.rviewer.skeletons.domain.dtos.response.DispenserResponse;
+import com.rviewer.skeletons.domain.dtos.response.SpendingResponse;
+import com.rviewer.skeletons.domain.dtos.response.UsageResponse;
 import com.rviewer.skeletons.domain.models.Dispenser;
-import com.rviewer.skeletons.domain.models.valueobjects.Status;
+import com.rviewer.skeletons.domain.models.Usage;
 import com.rviewer.skeletons.domain.persistence.DispenserRepository;
 import com.rviewer.skeletons.domain.persistence.UsageRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,20 +25,15 @@ public class DispenserService {
   @Autowired UsageRepository usageRepository;
 
   public DispenserResponse create(DispenserRequest dispenserRequest) {
-    Optional<Dispenser> dispenserSaved =
-        dispenserRepository.save(new Dispenser(dispenserRequest.getFlowVolume()));
-    return dispenserSaved
-        .map(
-            dispenser ->
-                new DispenserResponse(dispenser.getId().getValue(), dispenser.getFlowVolume()))
-        .orElseThrow(() -> new RuntimeException("dispenser can't be created"));
+    Dispenser dispenser = dispenserRepository.save(new Dispenser(dispenserRequest.getFlowVolume()));
+    return new DispenserResponse(dispenser.getId(), dispenser.getFlowVolume());
   }
 
-  public void open(int id, LocalDateTime date) {
+  public void open(UUID id, Optional<LocalDateTime> updatedAt) {
     Optional<Dispenser> dispenserById = dispenserRepository.findById(id);
     dispenserById.ifPresentOrElse(
         dispenser -> {
-          dispenser.open(date);
+          dispenser.open(updatedAt);
           dispenserRepository.save(dispenser);
         },
         () -> {
@@ -41,41 +41,38 @@ public class DispenserService {
         });
   }
 
-  public void close(int id, LocalDateTime date) {
+  @Transactional
+  public void close(UUID id, Optional<LocalDateTime> updatedAt) {
     Optional<Dispenser> dispenserById = dispenserRepository.findById(id);
     dispenserById.ifPresentOrElse(
         dispenser -> {
-          dispenser.close(date);
+          Usage usage = dispenser.close(updatedAt);
           dispenserRepository.save(dispenser);
-          usageRepository.save(dispenser);
+          usageRepository.save(usage);
         },
         () -> {
           throw new RuntimeException();
         });
   }
 
-  public SpendingResponse getUsages(int id) {
-    SpendingResponse spending = new SpendingResponse();
+  public SpendingResponse getUsages(UUID id) {
+    List<UsageResponse> usagesResponse = new ArrayList<>();
 
     Optional<Dispenser> dispenserById = this.dispenserRepository.findById(id);
     dispenserById.ifPresentOrElse(
         dispenser -> {
-          List<UsageResponse> usages = usageRepository.findByDispenserId(id);
-          if (dispenser.getStatus().isOpened()) {
-            Status dispenserStatus = dispenser.getStatus();
-            usages.add(
-                new UsageResponse(
-                    dispenserStatus.getOpenedAt(),
-                    null,
-                    dispenser.getFlowVolume(),
-                    dispenser.getTotalSpent()));
+          List<Usage> usages = usageRepository.findByDispenserId(id);
+          usages.stream()
+              .map((usage) -> new UsageResponse(usage))
+              .collect(Collectors.toCollection(() -> usagesResponse));
+          if (dispenser.isOpened()) {
+            usagesResponse.add(new UsageResponse(dispenser));
           }
-          spending.getUsages().addAll(usages);
         },
         () -> {
           throw new RuntimeException("dispenser not found");
         });
 
-    return spending;
+    return new SpendingResponse(usagesResponse);
   }
 }
