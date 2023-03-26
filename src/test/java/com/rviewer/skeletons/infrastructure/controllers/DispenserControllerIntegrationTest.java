@@ -42,7 +42,7 @@ public class DispenserControllerIntegrationTest {
   @MockBean private DispenserService service;
 
   @Test
-  public void isShouldReturnBadRequestWhenFlowVolumeIsNotPositive() throws Exception {
+  public void itShouldReturnBadRequestWhenFlowVolumeIsNotPositive() throws Exception {
     final var dispenser = new DispenserRequest(0f);
 
     mockMvc
@@ -54,7 +54,7 @@ public class DispenserControllerIntegrationTest {
   }
 
   @Test
-  public void isShouldCreateDispenser() throws Exception {
+  public void itShouldCreateDispenser() throws Exception {
     final var dispenser = new DispenserRequest(0.4f);
     when(service.create(any(DispenserRequest.class)))
         .thenReturn(new DispenserResponse(UUID.randomUUID(), dispenser.getFlowVolume()));
@@ -69,7 +69,7 @@ public class DispenserControllerIntegrationTest {
   }
 
   @Test
-  public void isShouldReturnNotFoundWhenDispenserNotExists() throws Exception {
+  public void itShouldReturnNotFoundWhenDispenserNotExists() throws Exception {
     final var status = new StatusRequest(Status.open, LocalDateTime.now());
     doThrow(DispenserNotFoundException.class).when(service).open(any(), any());
 
@@ -82,7 +82,7 @@ public class DispenserControllerIntegrationTest {
   }
 
   @Test
-  public void isShouldReturnOkWhenOpenDispenser() throws Exception {
+  public void itShouldReturnOkWhenOpenDispenser() throws Exception {
     final var status = new StatusRequest(Status.open, LocalDateTime.now());
     doNothing().when(service).open(any(), any());
 
@@ -95,7 +95,7 @@ public class DispenserControllerIntegrationTest {
   }
 
   @Test
-  public void isShouldReturnOkWhenCloseDispenser() throws Exception {
+  public void itShouldReturnOkWhenCloseDispenser() throws Exception {
     final var status = new StatusRequest(Status.close, LocalDateTime.now());
     doNothing().when(service).close(any(), any());
 
@@ -108,7 +108,7 @@ public class DispenserControllerIntegrationTest {
   }
 
   @Test
-  public void isShouldReturnSpendings() throws Exception {
+  public void itShouldReturnSpendings() throws Exception {
     final var id = UUID.randomUUID();
     final var usage = new UsageResponse(new Dispenser(0.4f));
     final var spendings = new SpendingResponse(List.of(usage));
