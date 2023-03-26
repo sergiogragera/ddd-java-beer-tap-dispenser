@@ -43,7 +43,7 @@ public class DispenserRepositoryIntegrationTest {
   void itShouldSaveOpenedDispenser() {
     final var now = LocalDateTime.now();
 
-    var dispenserEntity = entityManager.persist(new Dispenser(0.5f));
+    var dispenserEntity = entityManager.merge(new Dispenser(0.5f));
 
     dispenserEntity.open(Optional.of(now));
     final var dispenser = dispenserEntityRepository.save(dispenserEntity);
@@ -58,7 +58,7 @@ public class DispenserRepositoryIntegrationTest {
   void itShouldSaveClosedDispenser() {
     var dispenserEntity = new Dispenser(0.5f);
     dispenserEntity.open(Optional.of(LocalDateTime.now()));
-    dispenserEntity = entityManager.persist(dispenserEntity);
+    dispenserEntity = entityManager.merge(dispenserEntity);
 
     dispenserEntity.close(Optional.of(LocalDateTime.now()));
 
@@ -72,7 +72,7 @@ public class DispenserRepositoryIntegrationTest {
 
   @Test
   void itShouldFindDispenserById() {
-    final var dispenserEntity = entityManager.persist(new Dispenser(0.5f));
+    final var dispenserEntity = entityManager.merge(new Dispenser(0.5f));
 
     final var dispenser = dispenserEntityRepository.findById(dispenserEntity.getId());
     assertTrue(dispenser.isPresent());
