@@ -21,8 +21,7 @@ public class StatusRequest {
     close
   }
 
-  @NotNull
-  private Status status;
+  @NotNull private Status status;
 
   @JsonProperty("updated_at")
   private Optional<LocalDateTime> updatedAt;
