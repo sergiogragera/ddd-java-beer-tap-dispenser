@@ -36,7 +36,7 @@ import com.rviewer.skeletons.domain.models.Dispenser;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class DispenserControllerTest {
+public class DispenserControllerIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
 
