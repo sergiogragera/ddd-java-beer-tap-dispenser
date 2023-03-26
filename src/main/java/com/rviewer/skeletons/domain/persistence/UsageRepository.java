@@ -1,14 +1,15 @@
 package com.rviewer.skeletons.domain.persistence;
 
-import com.rviewer.skeletons.domain.dtos.UsageResponse;
-import com.rviewer.skeletons.domain.models.Dispenser;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.stereotype.Repository;
+
+import com.rviewer.skeletons.domain.models.Usage;
 
 @Repository
 public interface UsageRepository {
-  Optional<Dispenser> save(Dispenser dispenser);
+  Usage save(Usage usage);
 
-  List<UsageResponse> findByDispenserId(int id);
+  List<Usage> findByDispenserId(UUID id);
 }

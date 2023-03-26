@@ -2,10 +2,10 @@ package com.rviewer.skeletons.infrastructure.persistence;
 
 import com.rviewer.skeletons.domain.models.Dispenser;
 import com.rviewer.skeletons.domain.persistence.DispenserRepository;
-import com.rviewer.skeletons.infrastructure.persistence.adapters.DispenserAdapter;
-import com.rviewer.skeletons.infrastructure.persistence.entities.DispenserEntity;
 import com.rviewer.skeletons.infrastructure.persistence.jpa.DispenserEntityJpaRepository;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -19,19 +19,12 @@ public class DispenserEntityRepository implements DispenserRepository {
   }
 
   @Override
-  public Optional<Dispenser> save(Dispenser dispenser) {
-    Optional<DispenserEntity> optionalDispenserEntity =
-        DispenserAdapter.fromModelToEntity(Optional.ofNullable(dispenser));
-    if (optionalDispenserEntity.isPresent()) {
-      DispenserEntity dispenserEntity = dispenserRepository.save(optionalDispenserEntity.get());
-      return DispenserAdapter.fromEntityToModel(Optional.ofNullable(dispenserEntity));
-    }
-    return Optional.empty();
+  public Dispenser save(Dispenser dispenser) {
+    return dispenserRepository.save(dispenser);
   }
 
   @Override
-  public Optional<Dispenser> findById(int id) {
-    Optional<DispenserEntity> dispenserEntity = dispenserRepository.findById(id);
-    return DispenserAdapter.fromEntityToModel(dispenserEntity);
+  public Optional<Dispenser> findById(UUID id) {
+    return dispenserRepository.findById(id);
   }
 }
