@@ -4,6 +4,7 @@ import com.rviewer.skeletons.domain.dtos.request.DispenserRequest;
 import com.rviewer.skeletons.domain.dtos.response.DispenserResponse;
 import com.rviewer.skeletons.domain.dtos.response.SpendingResponse;
 import com.rviewer.skeletons.domain.dtos.response.UsageResponse;
+import com.rviewer.skeletons.domain.exceptions.DispenserNotFoundException;
 import com.rviewer.skeletons.domain.models.Dispenser;
 import com.rviewer.skeletons.domain.models.Usage;
 import com.rviewer.skeletons.domain.persistence.DispenserRepository;
@@ -70,7 +71,7 @@ public class DispenserService {
           }
         },
         () -> {
-          throw new RuntimeException("dispenser not found");
+          throw new DispenserNotFoundException();
         });
 
     return new SpendingResponse(usagesResponse);
