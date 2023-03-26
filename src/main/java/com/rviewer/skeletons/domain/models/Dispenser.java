@@ -18,6 +18,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 import lombok.Getter;
 
 @Entity
@@ -26,7 +28,7 @@ import lombok.Getter;
 public class Dispenser {
   private final float PRICE_REFERENCE = 12.25f;
 
-  @Id @GeneratedValue private UUID id;
+  @Id @GeneratedValue @Type(type="org.hibernate.type.UUIDCharType") private UUID id;
 
   @Column(nullable = false, precision = 10, scale = 6)
   private BigDecimal flowVolume;

@@ -13,13 +13,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
+
 import lombok.Getter;
 
 @Entity
 @Table(name = "usage")
 @Getter
 public class Usage {
-  @Id @GeneratedValue private UUID id;
+  @Id @GeneratedValue @Type(type="org.hibernate.type.UUIDCharType") private UUID id;
 
   @Column(nullable = false, precision = 10, scale = 6)
   private float flowVolume;
