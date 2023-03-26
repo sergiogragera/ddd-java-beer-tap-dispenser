@@ -46,6 +46,9 @@ public class DispenserController {
       }
     } catch (DispenserAlreadyOpenedException | DispenserAlreadyClosedException ex) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage(), ex);
+    } catch (DispenserNotFoundException ex) {
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND, "Requested dispenser does not exist", ex);
     }
   }
 

@@ -38,7 +38,7 @@ public class DispenserService {
           dispenserRepository.save(dispenser);
         },
         () -> {
-          throw new RuntimeException();
+          throw new DispenserNotFoundException();
         });
   }
 
