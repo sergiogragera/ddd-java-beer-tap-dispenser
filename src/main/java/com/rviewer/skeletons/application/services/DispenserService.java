@@ -31,48 +31,33 @@ public class DispenserService {
   }
 
   public void open(UUID id, Optional<LocalDateTime> updatedAt) {
-    Optional<Dispenser> dispenserById = dispenserRepository.findById(id);
-    dispenserById.ifPresentOrElse(
-        dispenser -> {
-          dispenser.open(updatedAt);
-          dispenserRepository.save(dispenser);
-        },
-        () -> {
-          throw new DispenserNotFoundException();
-        });
+    Dispenser dispenser =
+        dispenserRepository.findById(id).orElseThrow(() -> new DispenserNotFoundException());
+    dispenser.open(updatedAt);
+    dispenserRepository.save(dispenser);
   }
 
   @Transactional
   public void close(UUID id, Optional<LocalDateTime> updatedAt) {
-    Optional<Dispenser> dispenserById = dispenserRepository.findById(id);
-    dispenserById.ifPresentOrElse(
-        dispenser -> {
-          Usage usage = dispenser.close(updatedAt);
-          dispenserRepository.save(dispenser);
-          usageRepository.save(usage);
-        },
-        () -> {
-          throw new RuntimeException();
-        });
+    Dispenser dispenser =
+        dispenserRepository.findById(id).orElseThrow(() -> new DispenserNotFoundException());
+    Usage usage = dispenser.close(updatedAt);
+    dispenserRepository.save(dispenser);
+    usageRepository.save(usage);
   }
 
   public SpendingResponse getSpendings(UUID id) {
     List<UsageResponse> usagesResponse = new ArrayList<>();
 
-    Optional<Dispenser> dispenserById = this.dispenserRepository.findById(id);
-    dispenserById.ifPresentOrElse(
-        dispenser -> {
-          List<Usage> usages = usageRepository.findByDispenserId(id);
-          usages.stream()
-              .map((usage) -> new UsageResponse(usage))
-              .collect(Collectors.toCollection(() -> usagesResponse));
-          if (dispenser.isOpened()) {
-            usagesResponse.add(new UsageResponse(dispenser));
-          }
-        },
-        () -> {
-          throw new DispenserNotFoundException();
-        });
+    Dispenser dispenser =
+        this.dispenserRepository.findById(id).orElseThrow(() -> new DispenserNotFoundException());
+    List<Usage> usages = usageRepository.findByDispenserId(id);
+    usages.stream()
+        .map((usage) -> new UsageResponse(usage))
+        .collect(Collectors.toCollection(() -> usagesResponse));
+    if (dispenser.isOpened()) {
+      usagesResponse.add(new UsageResponse(dispenser));
+    }
 
     return new SpendingResponse(usagesResponse);
   }

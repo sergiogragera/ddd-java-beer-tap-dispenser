@@ -116,8 +116,7 @@ public class DispenserControllerIntegrationTest {
     when(service.getSpendings(id)).thenReturn(spendings);
 
     mockMvc
-        .perform(
-            get("/dispenser/" + id + "/spendings"))
+        .perform(get("/dispenser/" + id + "/spendings"))
         .andExpect(status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$.amount").exists());
   }
