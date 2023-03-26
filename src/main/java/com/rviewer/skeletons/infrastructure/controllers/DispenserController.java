@@ -9,6 +9,7 @@ import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyClosedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserNotFoundException;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -40,9 +41,9 @@ public class DispenserController {
       @PathVariable UUID id, @Valid @RequestBody StatusRequest statusRequest) {
     try {
       if (statusRequest.getStatus().toString().equals("open")) {
-        dispenserService.open(id, statusRequest.getUpdatedAt());
+        dispenserService.open(id, Optional.ofNullable(statusRequest.getUpdatedAt()));
       } else {
-        dispenserService.close(id, statusRequest.getUpdatedAt());
+        dispenserService.close(id, Optional.ofNullable(statusRequest.getUpdatedAt()));
       }
     } catch (DispenserAlreadyOpenedException | DispenserAlreadyClosedException ex) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage(), ex);
