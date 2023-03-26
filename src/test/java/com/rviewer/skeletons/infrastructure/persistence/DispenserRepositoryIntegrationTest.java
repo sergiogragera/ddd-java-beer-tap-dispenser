@@ -1,16 +1,14 @@
 package com.rviewer.skeletons.infrastructure.persistence;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.rviewer.skeletons.domain.models.Dispenser;
-import com.rviewer.skeletons.domain.models.valueobjects.Status;
 import com.rviewer.skeletons.domain.persistence.DispenserRepository;
-import com.rviewer.skeletons.infrastructure.persistence.entities.DispenserEntity;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
@@ -32,50 +30,46 @@ public class DispenserRepositoryIntegrationTest {
   @Test
   void itShouldSaveDispenser() {
     final var dispenser = dispenserEntityRepository.save(new Dispenser(0.4f));
-    assertTrue(dispenser.isPresent());
+    assertNotNull(dispenser);
 
-    final var dispenserEntity =
-        entityManager.find(DispenserEntity.class, dispenser.get().getId().getValue());
+    final var dispenserEntity = entityManager.find(Dispenser.class, dispenser.getId());
     assertEquals(0.4f, dispenserEntity.getFlowVolume());
   }
 
   @Test
   void itShouldSaveOpenedDispenser() {
-    var dispenserEntity = entityManager.persist(new DispenserEntity(0.5f));
+    final var now = LocalDateTime.now();
 
-    final var status = new Status(LocalDateTime.now());
-    final var dispenser =
-        dispenserEntityRepository.save(new Dispenser(dispenserEntity.getId(), 0.4f, status));
-    assertTrue(dispenser.isPresent());
+    var dispenserEntity = entityManager.persist(new Dispenser(0.5f));
 
-    Date openedAt =
-        Date.from(
-            dispenser.get().getStatus().getOpenedAt().atZone(ZoneId.systemDefault()).toInstant());
+    dispenserEntity.open(now);
+    final var dispenser = dispenserEntityRepository.save(dispenserEntity);
+    assertNotNull(dispenser);
 
-    dispenserEntity = entityManager.find(DispenserEntity.class, dispenser.get().getId().getValue());
-    assertEquals(0.4f, dispenserEntity.getFlowVolume());
-    assertEquals(openedAt, dispenserEntity.getOpenedAt());
+    dispenserEntity = entityManager.find(Dispenser.class, dispenser.getId());
+    assertEquals(0.5f, dispenserEntity.getFlowVolume());
+    assertEquals(now, dispenserEntity.getStatus().getOpenedAt());
   }
 
   @Test
   void itShouldSaveClosedDispenser() {
-    var dispenserEntity = new DispenserEntity(0.5f);
-    dispenserEntity.setOpenedAt(new Date());
+    var dispenserEntity = new Dispenser(0.5f);
+    dispenserEntity.open(LocalDateTime.now());
     dispenserEntity = entityManager.persist(dispenserEntity);
 
-    final var status = new Status(LocalDateTime.now(), LocalDateTime.now().plusSeconds(10));
-    final var dispenser =
-        dispenserEntityRepository.save(new Dispenser(dispenserEntity.getId(), 0.4f, status));
-    assertTrue(dispenser.isPresent());
+    dispenserEntity.close(LocalDateTime.now());
 
-    dispenserEntity = entityManager.find(DispenserEntity.class, dispenser.get().getId().getValue());
-    assertEquals(0.4f, dispenserEntity.getFlowVolume());
-    assertNull(dispenserEntity.getOpenedAt());
+    final var dispenser = dispenserEntityRepository.save(dispenserEntity);
+    assertNotNull(dispenser);
+
+    dispenserEntity = entityManager.find(Dispenser.class, dispenser.getId());
+    assertEquals(0.5f, dispenserEntity.getFlowVolume());
+    assertFalse(dispenserEntity.isOpened());
   }
 
   @Test
   void itShouldFindDispenserById() {
-    final var dispenserEntity = entityManager.persist(new DispenserEntity(0.5f));
+    final var dispenserEntity = entityManager.persist(new Dispenser(0.5f));
 
     final var dispenser = dispenserEntityRepository.findById(dispenserEntity.getId());
     assertTrue(dispenser.isPresent());

@@ -3,15 +3,20 @@ package com.rviewer.skeletons.domain.models.valueobjects;
 import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
 import lombok.Getter;
 
+@Getter
+@Embeddable
 public class Status {
-  @Getter private LocalDateTime openedAt;
-  @Getter private LocalDateTime closedAt;
+  @Column private LocalDateTime openedAt;
 
-  public Status() {
-    this(null);
-  }
+  @Column private LocalDateTime closedAt;
+
+  public Status() {}
 
   public Status(LocalDateTime openedAt) {
     this(openedAt, null);
@@ -19,7 +24,6 @@ public class Status {
 
   public Status(LocalDateTime openedAt, LocalDateTime closedAt) {
     this.openedAt = openedAt;
-
     if (closedAt != null) {
       if (openedAt == null || !closedAt.isAfter(this.openedAt)) {
         throw new InvalidArgumentException("close date before open");
@@ -32,7 +36,7 @@ public class Status {
     return this.openedAt != null && this.closedAt == null;
   }
 
-  public float getSecondsOpened() {
+  public long getSecondsOpened() {
     if (this.openedAt != null) {
       LocalDateTime start = this.openedAt;
       LocalDateTime end = LocalDateTime.now();
