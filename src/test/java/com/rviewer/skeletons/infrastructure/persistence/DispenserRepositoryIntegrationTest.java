@@ -5,10 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.notNull;
 
 import com.rviewer.skeletons.domain.models.Dispenser;
 import com.rviewer.skeletons.domain.persistence.DispenserRepository;
 import java.time.LocalDateTime;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
@@ -42,7 +45,7 @@ public class DispenserRepositoryIntegrationTest {
 
     var dispenserEntity = entityManager.persist(new Dispenser(0.5f));
 
-    dispenserEntity.open(now);
+    dispenserEntity.open(Optional.of(now));
     final var dispenser = dispenserEntityRepository.save(dispenserEntity);
     assertNotNull(dispenser);
 
@@ -54,10 +57,10 @@ public class DispenserRepositoryIntegrationTest {
   @Test
   void itShouldSaveClosedDispenser() {
     var dispenserEntity = new Dispenser(0.5f);
-    dispenserEntity.open(LocalDateTime.now());
+    dispenserEntity.open(Optional.of(LocalDateTime.now()));
     dispenserEntity = entityManager.persist(dispenserEntity);
 
-    dispenserEntity.close(LocalDateTime.now());
+    dispenserEntity.close(Optional.of(LocalDateTime.now()));
 
     final var dispenser = dispenserEntityRepository.save(dispenserEntity);
     assertNotNull(dispenser);
