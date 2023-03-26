@@ -31,7 +31,7 @@ public class Dispenser {
   @Id
   @GeneratedValue
   @Type(type = "org.hibernate.type.UUIDCharType")
-  private UUID id;
+  private UUID id = UUID.randomUUID();
 
   @Column(nullable = false, precision = 10, scale = 6)
   private BigDecimal flowVolume;
