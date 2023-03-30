@@ -32,6 +32,9 @@ import com.rviewer.skeletons.domain.dtos.request.StatusRequest.Status;
 import com.rviewer.skeletons.domain.dtos.response.DispenserResponse;
 import com.rviewer.skeletons.domain.dtos.response.SpendingResponse;
 import com.rviewer.skeletons.domain.dtos.response.UsageResponse;
+import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyClosedException;
+import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
+import com.rviewer.skeletons.domain.exceptions.DispenserClosedAfterOpenException;
 import com.rviewer.skeletons.domain.exceptions.DispenserNotFoundException;
 import com.rviewer.skeletons.domain.models.Dispenser;
 
@@ -79,10 +82,49 @@ public class DispenserControllerIntegrationTest {
 
     mockMvc
         .perform(
-            put("/dispenser/" + UUID.randomUUID())
+            put(String.format("/dispenser/%s/status", UUID.randomUUID()))
                 .content(asJsonString(status))
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound());
+  }
+
+  @Test
+  public void itShouldReturnConflictWhenDispenserAlreadyOpened() throws Exception {
+    final var status = new StatusRequest(Status.open, LocalDateTime.now());
+    doThrow(DispenserAlreadyOpenedException.class).when(service).open(any(), any());
+
+    mockMvc
+        .perform(
+            put(String.format("/dispenser/%s/status", UUID.randomUUID()))
+                .content(asJsonString(status))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isConflict());
+  }
+
+  @Test
+  public void itShouldReturnConflictWhenDispenserAlreadyClosed() throws Exception {
+    final var status = new StatusRequest(Status.close, LocalDateTime.now());
+    doThrow(DispenserAlreadyClosedException.class).when(service).close(any(), any());
+
+    mockMvc
+        .perform(
+            put(String.format("/dispenser/%s/status", UUID.randomUUID()))
+                .content(asJsonString(status))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isConflict());
+  }
+
+  @Test
+  public void itShouldReturnConflictWhenDispenserClosedAfterOpen() throws Exception {
+    final var status = new StatusRequest(Status.open, LocalDateTime.now());
+    doThrow(DispenserClosedAfterOpenException.class).when(service).open(any(), any());
+
+    mockMvc
+        .perform(
+            put(String.format("/dispenser/%s/status", UUID.randomUUID()))
+                .content(asJsonString(status))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isConflict());
   }
 
   @Test
@@ -92,7 +134,7 @@ public class DispenserControllerIntegrationTest {
 
     mockMvc
         .perform(
-            put("/dispenser/" + UUID.randomUUID())
+            put(String.format("/dispenser/%s/status", UUID.randomUUID()))
                 .content(asJsonString(status))
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
@@ -105,7 +147,7 @@ public class DispenserControllerIntegrationTest {
 
     mockMvc
         .perform(
-            put("/dispenser/" + UUID.randomUUID())
+            put(String.format("/dispenser/%s/status", UUID.randomUUID()))
                 .content(asJsonString(status))
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
@@ -119,7 +161,7 @@ public class DispenserControllerIntegrationTest {
     when(service.getSpendings(id)).thenReturn(spendings);
 
     mockMvc
-        .perform(get("/dispenser/" + id + "/spendings"))
+        .perform(get(String.format("/dispenser/%s/spendings", id)))
         .andExpect(status().isOk())
         .andExpect(MockMvcResultMatchers.jsonPath("$.amount").exists());
   }

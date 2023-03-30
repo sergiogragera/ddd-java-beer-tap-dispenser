@@ -1,9 +1,10 @@
 package com.rviewer.skeletons.domain.dtos.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDateTime;
-import java.util.Optional;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
+import java.time.LocalDateTime;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -24,5 +25,6 @@ public class StatusRequest {
   @NotNull private Status status;
 
   @JsonProperty("updated_at")
+  @JsonSerialize(using = LocalDateTimeSerializer.class)
   private LocalDateTime updatedAt;
 }

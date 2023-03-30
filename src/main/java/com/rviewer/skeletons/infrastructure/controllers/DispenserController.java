@@ -7,6 +7,7 @@ import com.rviewer.skeletons.domain.dtos.response.DispenserResponse;
 import com.rviewer.skeletons.domain.dtos.response.SpendingResponse;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyClosedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
+import com.rviewer.skeletons.domain.exceptions.DispenserClosedAfterOpenException;
 import com.rviewer.skeletons.domain.exceptions.DispenserNotFoundException;
 
 import java.util.Optional;
@@ -45,7 +46,9 @@ public class DispenserController {
       } else {
         dispenserService.close(id, Optional.ofNullable(statusRequest.getUpdatedAt()));
       }
-    } catch (DispenserAlreadyOpenedException | DispenserAlreadyClosedException ex) {
+    } catch (DispenserAlreadyOpenedException
+        | DispenserAlreadyClosedException
+        | DispenserClosedAfterOpenException ex) {
       throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage(), ex);
     } catch (DispenserNotFoundException ex) {
       throw new ResponseStatusException(

@@ -98,7 +98,7 @@ public class DispenserUnitTest {
   @Test
   public void itShouldThrowDispenserClosedAfterOpenExceptionWhenOpenBeforeAClosedDispenser() {
     assertThrows(
-      DispenserClosedAfterOpenException.class,
+        DispenserClosedAfterOpenException.class,
         () -> {
           final var now = LocalDateTime.now();
           final var secondsAgo = now.minusSeconds(15);

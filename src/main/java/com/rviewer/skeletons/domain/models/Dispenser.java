@@ -60,8 +60,7 @@ public class Dispenser {
     LocalDateTime openDate = date.orElse(LocalDateTime.now());
     if (this.isOpened()) {
       throw new DispenserAlreadyOpenedException();
-    }
-    else if (this.isClosedAfter(openDate)) {
+    } else if (this.isClosedAfter(openDate)) {
       throw new DispenserClosedAfterOpenException();
     }
     this.status = new Status(openDate);
