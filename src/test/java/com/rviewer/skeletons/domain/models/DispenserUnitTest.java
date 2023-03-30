@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyClosedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
+import com.rviewer.skeletons.domain.exceptions.DispenserClosedAfterOpenException;
 import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
 
 import java.time.LocalDateTime;
@@ -91,6 +92,23 @@ public class DispenserUnitTest {
           dispenser.open(Optional.of(secondsAgo));
           dispenser.close(Optional.of(now));
           dispenser.close(Optional.of(now));
+        });
+  }
+
+  @Test
+  public void itShouldThrowDispenserClosedAfterOpenExceptionWhenOpenBeforeAClosedDispenser() {
+    assertThrows(
+      DispenserClosedAfterOpenException.class,
+        () -> {
+          final var now = LocalDateTime.now();
+          final var secondsAgo = now.minusSeconds(15);
+          final var minuteAgo = now.minusSeconds(1);
+
+          var dispenser = new Dispenser(0.5f);
+
+          dispenser.open(Optional.of(secondsAgo));
+          dispenser.close(Optional.of(now));
+          dispenser.open(Optional.of(minuteAgo));
         });
   }
 
