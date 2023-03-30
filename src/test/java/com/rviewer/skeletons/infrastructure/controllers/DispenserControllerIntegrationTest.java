@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,9 +43,11 @@ public class DispenserControllerIntegrationTest {
 
   @MockBean private DispenserService service;
 
-  @Test
-  public void itShouldReturnBadRequestWhenFlowVolumeIsNotPositive() throws Exception {
-    final var dispenser = new DispenserRequest(0f);
+  @ParameterizedTest
+  @ValueSource(floats = {-1, -0.01f, 0.00f, 0})
+  public void itShouldReturnBadRequestWhenFlowVolumeIsNotPositive(float flowVolume)
+      throws Exception {
+    final var dispenser = new DispenserRequest(flowVolume);
 
     mockMvc
         .perform(
