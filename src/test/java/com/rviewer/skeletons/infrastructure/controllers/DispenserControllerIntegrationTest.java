@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -38,8 +40,7 @@ import com.rviewer.skeletons.domain.exceptions.DispenserClosedAfterOpenException
 import com.rviewer.skeletons.domain.exceptions.DispenserNotFoundException;
 import com.rviewer.skeletons.domain.models.Dispenser;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest
 public class DispenserControllerIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
@@ -47,8 +48,8 @@ public class DispenserControllerIntegrationTest {
   @MockBean private DispenserService service;
 
   @ParameterizedTest
-  @ValueSource(floats = {-1, -0.01f, 0.00f, 0})
-  public void itShouldReturnBadRequestWhenFlowVolumeIsNotPositive(float flowVolume)
+  @ValueSource(strings = {"-1", "-0.01", "0.00", "0"})
+  public void itShouldReturnBadRequestWhenFlowVolumeIsNotPositive(BigDecimal flowVolume)
       throws Exception {
     final var dispenser = new DispenserRequest(flowVolume);
 
@@ -62,7 +63,7 @@ public class DispenserControllerIntegrationTest {
 
   @Test
   public void itShouldCreateDispenser() throws Exception {
-    final var dispenser = new DispenserRequest(0.4f);
+    final var dispenser = new DispenserRequest(BigDecimal.valueOf(0.4));
     when(service.create(any(DispenserRequest.class)))
         .thenReturn(new DispenserResponse(UUID.randomUUID(), dispenser.getFlowVolume()));
 
@@ -156,7 +157,7 @@ public class DispenserControllerIntegrationTest {
   @Test
   public void itShouldReturnSpendings() throws Exception {
     final var id = UUID.randomUUID();
-    final var usage = new UsageResponse(new Dispenser(0.4f));
+    final var usage = new UsageResponse(new Dispenser(BigDecimal.valueOf(0.4)));
     final var spendings = new SpendingResponse(List.of(usage));
     when(service.getSpendings(id)).thenReturn(spendings);
 

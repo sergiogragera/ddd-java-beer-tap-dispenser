@@ -2,6 +2,7 @@ package com.rviewer.skeletons.domain.models;
 
 import com.rviewer.skeletons.domain.models.valueobjects.Status;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
@@ -28,10 +29,10 @@ public class Usage {
   private UUID id;
 
   @Column(nullable = false, precision = 10, scale = 6)
-  private float flowVolume;
+  private BigDecimal flowVolume;
 
   @Column(nullable = false, precision = 10, scale = 6)
-  private float totalSpent;
+  private BigDecimal totalSpent;
 
   @Embedded private Status status;
 

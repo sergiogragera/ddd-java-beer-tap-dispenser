@@ -1,5 +1,6 @@
 package com.rviewer.skeletons.domain.dtos.response;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.rviewer.skeletons.domain.models.Dispenser;
@@ -10,8 +11,8 @@ import lombok.Getter;
 public class UsageResponse {
   private LocalDateTime openedAt;
   private LocalDateTime closedAt;
-  private float flowVolume;
-  private float totalSpent;
+  private BigDecimal flowVolume;
+  private BigDecimal totalSpent;
 
   public UsageResponse(Usage usage) {
     this.openedAt = usage.getStatus().getOpenedAt();

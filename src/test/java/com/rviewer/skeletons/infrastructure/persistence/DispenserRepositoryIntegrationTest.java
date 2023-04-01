@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.rviewer.skeletons.domain.models.Dispenser;
 import com.rviewer.skeletons.domain.persistence.DispenserRepository;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -30,31 +32,31 @@ public class DispenserRepositoryIntegrationTest {
 
   @Test
   void itShouldSaveDispenser() {
-    final var dispenser = dispenserEntityRepository.save(new Dispenser(0.4f));
+    final var dispenser = dispenserEntityRepository.save(new Dispenser(BigDecimal.valueOf(0.5)));
     assertNotNull(dispenser);
 
     final var dispenserEntity = entityManager.find(Dispenser.class, dispenser.getId());
-    assertEquals(0.4f, dispenserEntity.getFlowVolume());
+    assertEquals(BigDecimal.valueOf(0.5), dispenserEntity.getFlowVolume());
   }
 
   @Test
   void itShouldSaveOpenedDispenser() {
     final var now = LocalDateTime.now();
 
-    var dispenserEntity = entityManager.merge(new Dispenser(0.5f));
+    var dispenserEntity = entityManager.merge(new Dispenser(BigDecimal.valueOf(0.5)));
 
     dispenserEntity.open(Optional.of(now));
     final var dispenser = dispenserEntityRepository.save(dispenserEntity);
     assertNotNull(dispenser);
 
     dispenserEntity = entityManager.find(Dispenser.class, dispenser.getId());
-    assertEquals(0.5f, dispenserEntity.getFlowVolume());
+    assertEquals(BigDecimal.valueOf(0.5), dispenserEntity.getFlowVolume());
     assertEquals(now, dispenserEntity.getStatus().getOpenedAt());
   }
 
   @Test
   void itShouldSaveClosedDispenser() {
-    var dispenserEntity = new Dispenser(0.5f);
+    var dispenserEntity = new Dispenser(BigDecimal.valueOf(0.5));
     dispenserEntity.open(Optional.of(LocalDateTime.now()));
     dispenserEntity = entityManager.merge(dispenserEntity);
 
@@ -64,13 +66,13 @@ public class DispenserRepositoryIntegrationTest {
     assertNotNull(dispenser);
 
     dispenserEntity = entityManager.find(Dispenser.class, dispenser.getId());
-    assertEquals(0.5f, dispenserEntity.getFlowVolume());
+    assertEquals(BigDecimal.valueOf(0.5), dispenserEntity.getFlowVolume());
     assertFalse(dispenserEntity.isOpened());
   }
 
   @Test
   void itShouldFindDispenserById() {
-    final var dispenserEntity = entityManager.merge(new Dispenser(0.5f));
+    final var dispenserEntity = entityManager.merge(new Dispenser(BigDecimal.valueOf(0.5)));
 
     final var dispenser = dispenserEntityRepository.findById(dispenserEntity.getId());
     assertTrue(dispenser.isPresent());

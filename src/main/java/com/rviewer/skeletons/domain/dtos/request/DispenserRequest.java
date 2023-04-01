@@ -1,5 +1,6 @@
 package com.rviewer.skeletons.domain.dtos.request;
 
+import java.math.BigDecimal;
 import javax.validation.constraints.Positive;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -15,5 +16,5 @@ import lombok.Setter;
 public class DispenserRequest {
   @Positive
   @JsonProperty("flow_volume")
-  private float flowVolume;
+  private BigDecimal flowVolume;
 }

@@ -27,7 +27,7 @@ import lombok.Getter;
 @Table(name = "dispenser")
 @Getter
 public class Dispenser {
-  private final float PRICE_REFERENCE = 12.25f;
+  public static final BigDecimal PRICE_REFERENCE = BigDecimal.valueOf(12.25);
 
   @Id
   @GeneratedValue
@@ -41,15 +41,15 @@ public class Dispenser {
 
   protected Dispenser() {}
 
-  public Dispenser(float flowVolume) {
-    if (flowVolume <= 0) {
+  public Dispenser(BigDecimal flowVolume) {
+    if (flowVolume.compareTo(BigDecimal.ZERO) <= 0) {
       throw new InvalidArgumentException("invalid flow volume: must be greater than zero");
     }
-    this.flowVolume = new BigDecimal(flowVolume).setScale(6, RoundingMode.HALF_UP);
+    this.flowVolume = flowVolume;
   }
 
-  public float getFlowVolume() {
-    return this.flowVolume.floatValue();
+  public BigDecimal getFlowVolume() {
+    return this.flowVolume;
   }
 
   public boolean isOpened() {
@@ -78,13 +78,12 @@ public class Dispenser {
     return new Usage(this);
   }
 
-  public float getLitersDispensed() {
+  public BigDecimal getLitersDispensed() {
     return BigDecimal.valueOf(this.status.getSecondsOpened())
-        .multiply(this.flowVolume)
-        .floatValue();
+        .multiply(this.flowVolume);
   }
 
-  public float getTotalSpent() {
-    return this.getLitersDispensed() * PRICE_REFERENCE;
+  public BigDecimal getTotalSpent() {
+    return this.getLitersDispensed().multiply(PRICE_REFERENCE);
   }
 }

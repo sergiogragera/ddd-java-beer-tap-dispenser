@@ -11,6 +11,7 @@ import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserClosedAfterOpenException;
 import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -21,9 +22,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 public class DispenserUnitTest {
 
   @ParameterizedTest
-  @ValueSource(floats = {-1, -0.01f, 0.00f, 0})
+  @ValueSource(strings = {"-1", "-0.01", "0.00", "0"})
   public void itShouldThrowIllegalArgumentExceptionWhenFlowVolumeArgIsNotPositiveNumber(
-      float flowVolume) {
+    BigDecimal flowVolume) {
     assertThrows(
         InvalidArgumentException.class,
         () -> {
@@ -33,17 +34,17 @@ public class DispenserUnitTest {
 
   @Test
   public void itShouldReturnDispenser() {
-    final var dispenser = new Dispenser(0.5f);
+    final var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
 
     assertNotNull(dispenser);
-    assertEquals(0.5f, dispenser.getFlowVolume());
+    assertEquals(BigDecimal.valueOf(0.5), dispenser.getFlowVolume());
     assertNotNull(dispenser.getStatus());
   }
 
   @Test
   public void itShouldReturnOpenDispenserWhenOpen() {
     final var now = LocalDateTime.now();
-    final var dispenser = new Dispenser(0.5f);
+    final var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
 
     dispenser.open(Optional.of(now));
 
@@ -56,7 +57,7 @@ public class DispenserUnitTest {
   public void itShouldReturnClosedStatusWhenOpenAndClose() {
     final var now = LocalDateTime.now();
     final var secondsAgo = now.minusSeconds(15);
-    final var dispenser = new Dispenser(0.5f);
+    final var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
 
     dispenser.open(Optional.of(secondsAgo));
     dispenser.close(Optional.of(now));
@@ -72,7 +73,7 @@ public class DispenserUnitTest {
     assertThrows(
         DispenserAlreadyOpenedException.class,
         () -> {
-          var dispenser = new Dispenser(0.5f);
+          var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
 
           dispenser.open(Optional.of(LocalDateTime.now()));
           dispenser.open(Optional.of(LocalDateTime.now()));
@@ -87,7 +88,7 @@ public class DispenserUnitTest {
           final var now = LocalDateTime.now();
           final var secondsAgo = now.minusSeconds(15);
 
-          var dispenser = new Dispenser(0.5f);
+          var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
 
           dispenser.open(Optional.of(secondsAgo));
           dispenser.close(Optional.of(now));
@@ -104,7 +105,7 @@ public class DispenserUnitTest {
           final var secondsAgo = now.minusSeconds(15);
           final var minuteAgo = now.minusSeconds(1);
 
-          var dispenser = new Dispenser(0.5f);
+          var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
 
           dispenser.open(Optional.of(secondsAgo));
           dispenser.close(Optional.of(now));
@@ -115,33 +116,35 @@ public class DispenserUnitTest {
   @Test
   public void itShouldGetLitersGreaterThanZeroWhenOpenedDispenser() {
     final var secondsAgo = LocalDateTime.now().minusSeconds(10);
-    final var dispenser = new Dispenser(0.5f);
+    final var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
 
     dispenser.open(Optional.of(secondsAgo));
 
     assertNotNull(dispenser);
-    assertTrue(dispenser.getLitersDispensed() >= 5);
+    assertTrue(dispenser.getLitersDispensed().compareTo(BigDecimal.valueOf(5)) >= 0);
 
     final var minutesAgo = LocalDateTime.now().minusMinutes(10);
-    final var dispenserOpenedBefore = new Dispenser(0.5f);
+    final var dispenserOpenedBefore = new Dispenser(BigDecimal.valueOf(0.5));
 
     dispenserOpenedBefore.open(Optional.of(minutesAgo));
 
     assertNotNull(dispenserOpenedBefore);
-    assertTrue(dispenserOpenedBefore.getLitersDispensed() >= 50);
-    assertTrue(dispenserOpenedBefore.getLitersDispensed() > dispenser.getLitersDispensed());
+    assertTrue(dispenserOpenedBefore.getLitersDispensed().compareTo(BigDecimal.valueOf(50)) >= 0);
+    assertTrue(dispenserOpenedBefore.getLitersDispensed().compareTo(dispenser.getLitersDispensed()) > 0);
   }
 
   @Test
   public void itShouldGetKnownLitersWhenClosedDispenser() {
     final var now = LocalDateTime.now();
-    final var secondsAgo = now.minusSeconds(10);
-    final var dispenser = new Dispenser(0.66f);
+    final var secondsDispensed = 10;
+    final var secondsAgo = now.minusSeconds(secondsDispensed);
+    final var flowVolume = 0.66;
+    final var dispenser = new Dispenser(BigDecimal.valueOf(flowVolume));
 
     dispenser.open(Optional.of(secondsAgo));
     dispenser.close(Optional.of(now));
 
     assertNotNull(dispenser);
-    assertEquals(6.6f, dispenser.getLitersDispensed());
+    assertEquals(BigDecimal.valueOf(flowVolume).multiply(BigDecimal.valueOf(secondsDispensed)), dispenser.getLitersDispensed());
   }
 }

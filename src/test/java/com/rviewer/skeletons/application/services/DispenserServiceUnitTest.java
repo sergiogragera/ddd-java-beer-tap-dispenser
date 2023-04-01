@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,7 +41,7 @@ public class DispenserServiceUnitTest {
 
   @Test
   void itShouldCreateDispenser() {
-    final var dispenser = new Dispenser(0.4f);
+    final var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
     when(dispenserRepository.save(any(Dispenser.class))).thenReturn(dispenser);
 
     final var dispenserResponse = service.create(new DispenserRequest(dispenser.getFlowVolume()));
@@ -50,7 +51,7 @@ public class DispenserServiceUnitTest {
 
   @Test
   void isShouldThrowDispenserAlreadyOpenedExceptionWhenOpen() {
-    final var dispenser = new Dispenser(0.4f);
+    final var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
     dispenser.open(Optional.of(LocalDateTime.now()));
     when(dispenserRepository.findById(dispenser.getId())).thenReturn(Optional.of(dispenser));
 
@@ -63,7 +64,7 @@ public class DispenserServiceUnitTest {
 
   @Test
   void isShouldSaveOpenedDispenserWhenOpen() {
-    final var dispenser = new Dispenser(0.4f);
+    final var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
     when(dispenserRepository.findById(dispenser.getId())).thenReturn(Optional.of(dispenser));
 
     service.open(dispenser.getId(), Optional.of(LocalDateTime.now()));
@@ -73,7 +74,7 @@ public class DispenserServiceUnitTest {
 
   @Test
   void isShouldThrowDispenserAlreadyClosedExceptionWhenClose() {
-    final var dispenser = new Dispenser(0.4f);
+    final var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
     when(dispenserRepository.findById(dispenser.getId())).thenReturn(Optional.of(dispenser));
 
     Assertions.assertThrows(
@@ -85,7 +86,7 @@ public class DispenserServiceUnitTest {
 
   @Test
   void isShouldSaveClosedDispenserWhenClose() {
-    final var dispenser = new Dispenser(0.4f);
+    final var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
     dispenser.open(Optional.of(LocalDateTime.now()));
     when(dispenserRepository.findById(dispenser.getId())).thenReturn(Optional.of(dispenser));
 
