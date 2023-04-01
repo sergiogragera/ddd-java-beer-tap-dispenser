@@ -34,7 +34,7 @@ public class UsageRepositoryIntegrationTest {
 
   @Autowired private TestEntityManager entityManager;
   @Autowired private UsageRepository usageRepository;
-  
+
   private Dispenser dispenser;
 
   @BeforeEach
@@ -75,7 +75,7 @@ public class UsageRepositoryIntegrationTest {
     for (int i = 0; i < usages; i++) {
       dispenser.open(Optional.of(LocalDateTime.now()));
       final var usage = dispenser.close(Optional.of(LocalDateTime.now()));
-      entityManager.merge(usage); 
+      entityManager.merge(usage);
     }
 
     final var foundUsages = usageRepository.findByDispenserId(this.dispenser.getId());

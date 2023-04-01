@@ -47,7 +47,8 @@ public class Usage {
     if (dispenser.getStatus() == null) {
       throw new NullPointerException("dispenser must have status");
     }
-    if (dispenser.getStatus().getOpenedAt() == null || dispenser.getStatus().getClosedAt() == null) {
+    if (dispenser.getStatus().getOpenedAt() == null
+        || dispenser.getStatus().getClosedAt() == null) {
       throw new IllegalArgumentException("dispenser must have closed status");
     }
     this.status = dispenser.getStatus();

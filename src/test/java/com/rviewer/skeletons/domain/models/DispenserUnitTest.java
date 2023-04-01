@@ -24,7 +24,7 @@ public class DispenserUnitTest {
   @ParameterizedTest
   @ValueSource(strings = {"-1", "-0.01", "0.00", "0"})
   public void itShouldThrowIllegalArgumentExceptionWhenFlowVolumeArgIsNotPositiveNumber(
-    BigDecimal flowVolume) {
+      BigDecimal flowVolume) {
     assertThrows(
         InvalidArgumentException.class,
         () -> {
@@ -130,7 +130,8 @@ public class DispenserUnitTest {
 
     assertNotNull(dispenserOpenedBefore);
     assertTrue(dispenserOpenedBefore.getLitersDispensed().compareTo(BigDecimal.valueOf(50)) >= 0);
-    assertTrue(dispenserOpenedBefore.getLitersDispensed().compareTo(dispenser.getLitersDispensed()) > 0);
+    assertTrue(
+        dispenserOpenedBefore.getLitersDispensed().compareTo(dispenser.getLitersDispensed()) > 0);
   }
 
   @Test
@@ -145,6 +146,8 @@ public class DispenserUnitTest {
     dispenser.close(Optional.of(now));
 
     assertNotNull(dispenser);
-    assertEquals(BigDecimal.valueOf(flowVolume).multiply(BigDecimal.valueOf(secondsDispensed)), dispenser.getLitersDispensed());
+    assertEquals(
+        BigDecimal.valueOf(flowVolume).multiply(BigDecimal.valueOf(secondsDispensed)),
+        dispenser.getLitersDispensed());
   }
 }

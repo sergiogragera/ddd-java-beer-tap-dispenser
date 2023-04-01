@@ -79,8 +79,7 @@ public class Dispenser {
   }
 
   public BigDecimal getLitersDispensed() {
-    return BigDecimal.valueOf(this.status.getSecondsOpened())
-        .multiply(this.flowVolume);
+    return BigDecimal.valueOf(this.status.getSecondsOpened()).multiply(this.flowVolume);
   }
 
   public BigDecimal getTotalSpent() {
