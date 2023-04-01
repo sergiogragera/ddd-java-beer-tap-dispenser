@@ -44,8 +44,11 @@ public class Usage {
 
   protected Usage(Dispenser dispenser) {
     this.dispenser = dispenser;
-    if (dispenser.isOpened()) {
-      throw new IllegalArgumentException("dispenser must be closed");
+    if (dispenser.getStatus() == null) {
+      throw new NullPointerException("dispenser must have status");
+    }
+    if (dispenser.getStatus().getOpenedAt() == null || dispenser.getStatus().getClosedAt() == null) {
+      throw new IllegalArgumentException("dispenser must have closed status");
     }
     this.status = dispenser.getStatus();
     this.flowVolume = dispenser.getFlowVolume();
