@@ -3,10 +3,8 @@ package com.rviewer.skeletons.domain.models.valueobjects;
 import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-
 import lombok.Getter;
 
 @Getter

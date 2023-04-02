@@ -1,12 +1,10 @@
 package com.rviewer.skeletons.infrastructure.persistence;
 
 import com.rviewer.skeletons.domain.models.Usage;
-import com.rviewer.skeletons.domain.models.valueobjects.Status;
 import com.rviewer.skeletons.domain.persistence.UsageRepository;
 import com.rviewer.skeletons.infrastructure.persistence.jpa.UsageEntityJpaRepository;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

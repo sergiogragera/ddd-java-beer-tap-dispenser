@@ -1,10 +1,8 @@
 package com.rviewer.skeletons.domain.dtos.response;
 
+import com.rviewer.skeletons.domain.dtos.request.DispenserRequest;
 import java.math.BigDecimal;
 import java.util.UUID;
-
-import com.rviewer.skeletons.domain.dtos.request.DispenserRequest;
-
 import lombok.Getter;
 
 @Getter

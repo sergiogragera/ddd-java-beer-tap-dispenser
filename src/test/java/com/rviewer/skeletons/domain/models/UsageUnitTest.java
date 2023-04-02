@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 
 public class UsageUnitTest {

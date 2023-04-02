@@ -1,10 +1,8 @@
 package com.rviewer.skeletons.domain.models;
 
 import com.rviewer.skeletons.domain.models.valueobjects.Status;
-
 import java.math.BigDecimal;
 import java.util.UUID;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -14,10 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Type;
-
 import lombok.Getter;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "usage")

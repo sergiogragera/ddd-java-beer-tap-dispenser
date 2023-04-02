@@ -5,7 +5,6 @@ import com.rviewer.skeletons.domain.persistence.DispenserRepository;
 import com.rviewer.skeletons.infrastructure.persistence.jpa.DispenserEntityJpaRepository;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

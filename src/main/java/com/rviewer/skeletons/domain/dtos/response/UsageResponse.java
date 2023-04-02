@@ -1,10 +1,9 @@
 package com.rviewer.skeletons.domain.dtos.response;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 import com.rviewer.skeletons.domain.models.Dispenser;
 import com.rviewer.skeletons.domain.models.Usage;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter

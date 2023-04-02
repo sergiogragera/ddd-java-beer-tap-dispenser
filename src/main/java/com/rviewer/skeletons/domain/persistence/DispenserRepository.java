@@ -3,7 +3,6 @@ package com.rviewer.skeletons.domain.persistence;
 import com.rviewer.skeletons.domain.models.Dispenser;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.springframework.stereotype.Repository;
 
 @Repository

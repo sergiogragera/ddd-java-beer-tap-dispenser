@@ -1,9 +1,8 @@
 package com.rviewer.skeletons.domain.dtos.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import javax.validation.constraints.Positive;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -2,7 +2,6 @@ package com.rviewer.skeletons.domain.dtos.response;
 
 import java.math.BigDecimal;
 import java.util.List;
-
 import lombok.Getter;
 
 @Getter
