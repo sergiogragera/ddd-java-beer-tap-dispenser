@@ -3,25 +3,21 @@ package com.rviewer.skeletons.domain.models;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyClosedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserClosedAfterOpenException;
+import com.rviewer.skeletons.domain.exceptions.DispenserOpenedAfterCloseException;
 import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
 import com.rviewer.skeletons.domain.models.valueobjects.Status;
-
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
-
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Type;
-
 import lombok.Getter;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "dispenser")
@@ -71,11 +67,18 @@ public class Dispenser {
   }
 
   public Usage close(Optional<LocalDateTime> date) {
+    LocalDateTime closeDate = date.orElse(LocalDateTime.now());
     if (!this.isOpened()) {
       throw new DispenserAlreadyClosedException();
+    } else if (this.isOpenedAfter(closeDate)) {
+      throw new DispenserOpenedAfterCloseException();
     }
-    this.status = new Status(this.status.getOpenedAt(), date.orElse(LocalDateTime.now()));
+    this.status = new Status(this.status.getOpenedAt(), closeDate);
     return new Usage(this);
+  }
+
+  private boolean isOpenedAfter(LocalDateTime date) {
+    return this.status.getOpenedAt() != null && this.status.getOpenedAt().isAfter(date);
   }
 
   public BigDecimal getLitersDispensed() {

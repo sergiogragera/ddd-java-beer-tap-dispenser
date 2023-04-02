@@ -9,12 +9,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyClosedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserClosedAfterOpenException;
+import com.rviewer.skeletons.domain.exceptions.DispenserOpenedAfterCloseException;
 import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -110,6 +109,21 @@ public class DispenserUnitTest {
           dispenser.open(Optional.of(secondsAgo));
           dispenser.close(Optional.of(now));
           dispenser.open(Optional.of(minuteAgo));
+        });
+  }
+
+  @Test
+  public void itShouldThrowDispenserOpenedAfterCloseExceptionWhenCloseBeforeAOpenedDispenser() {
+    assertThrows(
+        DispenserOpenedAfterCloseException.class,
+        () -> {
+          final var now = LocalDateTime.now();
+          final var secondsAgo = now.minusSeconds(15);
+
+          var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
+
+          dispenser.open(Optional.of(now));
+          dispenser.close(Optional.of(secondsAgo));
         });
   }
 
