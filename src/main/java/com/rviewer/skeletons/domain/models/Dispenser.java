@@ -5,7 +5,7 @@ import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserClosedAfterOpenException;
 import com.rviewer.skeletons.domain.exceptions.DispenserOpenedAfterCloseException;
 import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
-import com.rviewer.skeletons.domain.models.valueobjects.Status;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -56,29 +56,21 @@ public class Dispenser {
     LocalDateTime openDate = date.orElse(LocalDateTime.now());
     if (this.isOpened()) {
       throw new DispenserAlreadyOpenedException();
-    } else if (this.isClosedAfter(openDate)) {
+    } else if (this.status.isClosedAfter(openDate)) {
       throw new DispenserClosedAfterOpenException();
     }
     this.status = new Status(openDate);
-  }
-
-  private boolean isClosedAfter(LocalDateTime date) {
-    return this.status.getClosedAt() != null && this.status.getClosedAt().isAfter(date);
   }
 
   public Usage close(Optional<LocalDateTime> date) {
     LocalDateTime closeDate = date.orElse(LocalDateTime.now());
     if (!this.isOpened()) {
       throw new DispenserAlreadyClosedException();
-    } else if (this.isOpenedAfter(closeDate)) {
+    } else if (this.status.isOpenedAfter(closeDate)) {
       throw new DispenserOpenedAfterCloseException();
     }
     this.status = new Status(this.status.getOpenedAt(), closeDate);
     return new Usage(this);
-  }
-
-  private boolean isOpenedAfter(LocalDateTime date) {
-    return this.status.getOpenedAt() != null && this.status.getOpenedAt().isAfter(date);
   }
 
   public BigDecimal getLitersDispensed() {

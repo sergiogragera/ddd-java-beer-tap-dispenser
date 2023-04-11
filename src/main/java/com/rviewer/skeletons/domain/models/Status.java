@@ -1,4 +1,4 @@
-package com.rviewer.skeletons.domain.models.valueobjects;
+package com.rviewer.skeletons.domain.models;
 
 import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
 import java.time.LocalDateTime;
@@ -32,6 +32,14 @@ public class Status {
 
   public boolean isOpened() {
     return this.openedAt != null && this.closedAt == null;
+  }
+
+  public boolean isClosedAfter(LocalDateTime date) {
+    return this.closedAt != null && this.closedAt.isAfter(date);
+  }
+
+  public boolean isOpenedAfter(LocalDateTime date) {
+    return this.openedAt != null && this.openedAt.isAfter(date);
   }
 
   public long getSecondsOpened() {
