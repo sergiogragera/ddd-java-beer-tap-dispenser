@@ -9,9 +9,7 @@ import static org.mockito.Mockito.when;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyClosedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
 import com.rviewer.skeletons.domain.models.Dispenser;
-import com.rviewer.skeletons.domain.models.Usage;
 import com.rviewer.skeletons.domain.persistence.DispenserRepository;
-import com.rviewer.skeletons.domain.persistence.UsageRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -29,8 +27,6 @@ public class StatusServiceUnitTest {
   @InjectMocks private StatusService service;
 
   @Mock private DispenserRepository dispenserRepository;
-
-  @Mock private UsageRepository usageRepository;
 
   @Test
   void itShouldThrowDispenserAlreadyOpenedExceptionWhenOpen() {
@@ -76,7 +72,5 @@ public class StatusServiceUnitTest {
     service.close(dispenser.getId(), Optional.of(LocalDateTime.now()));
     verify(dispenserRepository, times(1)).save(any(Dispenser.class));
     verifyNoMoreInteractions(dispenserRepository);
-    verify(usageRepository, times(1)).save(any(Usage.class));
-    verifyNoMoreInteractions(usageRepository);
   }
 }

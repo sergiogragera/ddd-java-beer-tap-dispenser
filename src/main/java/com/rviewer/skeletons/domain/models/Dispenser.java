@@ -1,5 +1,6 @@
 package com.rviewer.skeletons.domain.models;
 
+import com.rviewer.skeletons.domain.events.DispenserClosedEvent;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyClosedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserClosedAfterOpenException;
@@ -17,11 +18,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Getter;
 import org.hibernate.annotations.Type;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 @Entity
 @Table(name = "dispenser")
 @Getter
-public class Dispenser {
+public class Dispenser extends AbstractAggregateRoot<Dispenser> {
   public static final BigDecimal PRICE_REFERENCE = BigDecimal.valueOf(12.25);
 
   @Id
@@ -69,6 +71,7 @@ public class Dispenser {
       throw new DispenserOpenedAfterCloseException();
     }
     this.status = new Status(this.status.getOpenedAt(), closeDate);
+    registerEvent(new DispenserClosedEvent(this));
     return new Usage(this);
   }
 

@@ -37,7 +37,7 @@ public class Usage {
 
   protected Usage() {}
 
-  protected Usage(Dispenser dispenser) {
+  public Usage(Dispenser dispenser) {
     this.dispenser = dispenser;
     if (dispenser.getStatus() == null) {
       throw new NullPointerException("dispenser must have status");
