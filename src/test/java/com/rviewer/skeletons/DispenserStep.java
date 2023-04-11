@@ -3,20 +3,17 @@ package com.rviewer.skeletons;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.boot.test.context.SpringBootTest;
-
 import com.fasterxml.jackson.core.type.TypeReference;
-
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+import org.springframework.boot.test.context.SpringBootTest;
 
 @CucumberContextConfiguration
 @SpringBootTest
@@ -31,8 +28,8 @@ public class DispenserStep extends AbstractSteps {
   private static final TypeReference<Map<String, Object>> RESOURCE_TYPE =
       new TypeReference<Map<String, Object>>() {};
 
-  @Given("^a dispenser exists$")
-  public void aDispenserExists() throws Throwable {
+  @Given("^the dispenser exists$")
+  public void theDispenserExists() throws Throwable {
     createDispenser();
   }
 
@@ -126,6 +123,7 @@ public class DispenserStep extends AbstractSteps {
                 < 0);
         break;
       case "equals to":
+      default:
         assertTrue(
             amount.compareTo(
                     new BigDecimal(
