@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyClosedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
+import com.rviewer.skeletons.domain.exceptions.DispenserNotFoundException;
 import com.rviewer.skeletons.domain.models.Dispenser;
 import com.rviewer.skeletons.domain.persistence.DispenserRepository;
 import java.math.BigDecimal;
@@ -29,6 +30,18 @@ public class StatusServiceUnitTest {
   @Mock private DispenserRepository dispenserRepository;
 
   @Test
+  void itShouldThrowDispenserNotFoundExceptionWhenOpenNotFoundDispenser() {
+    final var dispenserId = UUID.randomUUID();
+    when(dispenserRepository.findById(dispenserId)).thenReturn(Optional.empty());
+
+    Assertions.assertThrows(
+        DispenserNotFoundException.class,
+        () -> service.open(dispenserId, Optional.of(LocalDateTime.now())));
+    verify(dispenserRepository, times(1)).findById(any(UUID.class));
+    verifyNoMoreInteractions(dispenserRepository);
+  }
+
+  @Test
   void itShouldThrowDispenserAlreadyOpenedExceptionWhenOpen() {
     final var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
     dispenser.open(LocalDateTime.now());
@@ -48,6 +61,18 @@ public class StatusServiceUnitTest {
 
     service.open(dispenser.getId(), Optional.of(LocalDateTime.now()));
     verify(dispenserRepository, times(1)).save(any(Dispenser.class));
+    verifyNoMoreInteractions(dispenserRepository);
+  }
+
+  @Test
+  void itShouldThrowDispenserNotFoundExceptionWhenCloseNotFundDispenser() {
+    final var dispenserId = UUID.randomUUID();
+    when(dispenserRepository.findById(dispenserId)).thenReturn(Optional.empty());
+
+    Assertions.assertThrows(
+        DispenserNotFoundException.class,
+        () -> service.close(dispenserId, Optional.of(LocalDateTime.now())));
+    verify(dispenserRepository, times(1)).findById(any(UUID.class));
     verifyNoMoreInteractions(dispenserRepository);
   }
 
