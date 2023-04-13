@@ -36,9 +36,6 @@ public class Usage {
   @JoinColumn(name = "dispenser_id", nullable = false)
   private Dispenser dispenser;
 
-  @Column(name = "dispenser_id")
-  private UUID dispenserId;
-
   protected Usage() {}
 
   public Usage(Dispenser dispenser) {

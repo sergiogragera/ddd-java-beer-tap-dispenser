@@ -17,6 +17,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 public class DispenserUnitTest {
+  final LocalDateTime now = LocalDateTime.now();
+  final LocalDateTime secondsAgo = now.minusSeconds(15);
+  final LocalDateTime minutesAgo = now.minusMinutes(15);
 
   @ParameterizedTest
   @ValueSource(strings = {"-1", "-0.01", "0.00", "0"})
@@ -73,8 +76,6 @@ public class DispenserUnitTest {
 
   @Test
   public void itShouldReturnClosedStatusWhenOpenAndClose() {
-    final var now = LocalDateTime.now();
-    final var secondsAgo = now.minusSeconds(15);
     final var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
 
     dispenser.open(secondsAgo);
@@ -103,9 +104,6 @@ public class DispenserUnitTest {
     assertThrows(
         DispenserAlreadyClosedException.class,
         () -> {
-          final var now = LocalDateTime.now();
-          final var secondsAgo = now.minusSeconds(15);
-
           var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
 
           dispenser.open(secondsAgo);
@@ -119,15 +117,11 @@ public class DispenserUnitTest {
     assertThrows(
         DispenserClosedAfterOpenException.class,
         () -> {
-          final var now = LocalDateTime.now();
-          final var secondsAgo = now.minusSeconds(15);
-          final var minuteAgo = now.minusSeconds(1);
-
           var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
 
           dispenser.open(secondsAgo);
           dispenser.close(now);
-          dispenser.open(minuteAgo);
+          dispenser.open(minutesAgo);
         });
   }
 
@@ -136,9 +130,6 @@ public class DispenserUnitTest {
     assertThrows(
         DispenserOpenedAfterCloseException.class,
         () -> {
-          final var now = LocalDateTime.now();
-          final var secondsAgo = now.minusSeconds(15);
-
           var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
 
           dispenser.open(now);
@@ -148,7 +139,7 @@ public class DispenserUnitTest {
 
   @Test
   public void itShouldGetLitersGreaterThanZeroWhenOpenedDispenser() {
-    final var secondsAgo = LocalDateTime.now().minusSeconds(10);
+    final var secondsAgo = now.minusSeconds(10);
     final var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
 
     dispenser.open(secondsAgo);
@@ -169,7 +160,6 @@ public class DispenserUnitTest {
 
   @Test
   public void itShouldGetKnownLitersWhenClosedDispenser() {
-    final var now = LocalDateTime.now();
     final var secondsDispensed = 10;
     final var secondsAgo = now.minusSeconds(secondsDispensed);
     final var flowVolume = 0.66;

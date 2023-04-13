@@ -9,7 +9,6 @@ import com.rviewer.skeletons.domain.models.Usage;
 import com.rviewer.skeletons.domain.persistence.UsageRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,10 +40,10 @@ public class UsageRepositoryIntegrationTest {
 
   @Test
   void itShouldSaveUsage() {
-    dispenser.open(Optional.of(LocalDateTime.now()));
-    final var usage = dispenser.close(Optional.of(LocalDateTime.now()));
+    dispenser.open(LocalDateTime.now());
+    dispenser.close(LocalDateTime.now());
 
-    final var savedUsage = usageRepository.save(usage);
+    final var savedUsage = usageRepository.save(new Usage(dispenser));
     assertNotNull(savedUsage);
 
     final var foundUsage = entityManager.find(Usage.class, savedUsage.getId());
@@ -56,9 +55,9 @@ public class UsageRepositoryIntegrationTest {
 
   @Test
   void itShouldFindOneUsageByDispenserId() {
-    dispenser.open(Optional.of(LocalDateTime.now()));
-    final var usage = dispenser.close(Optional.of(LocalDateTime.now()));
-    final var savedUsage = entityManager.merge(usage);
+    dispenser.open(LocalDateTime.now());
+    dispenser.close(LocalDateTime.now());
+    final var savedUsage = entityManager.merge(new Usage(dispenser));
 
     final var foundUsages = usageRepository.findByDispenserId(this.dispenser.getId());
     assertTrue(foundUsages.size() == 1);
@@ -69,9 +68,9 @@ public class UsageRepositoryIntegrationTest {
   @ValueSource(ints = {2, 4, 10})
   void itShouldFindMultipleUsagesByDispenserId(int usages) {
     for (int i = 0; i < usages; i++) {
-      dispenser.open(Optional.of(LocalDateTime.now()));
-      final var usage = dispenser.close(Optional.of(LocalDateTime.now()));
-      entityManager.merge(usage);
+      dispenser.open(LocalDateTime.now());
+      dispenser.close(LocalDateTime.now());
+      entityManager.merge(new Usage(dispenser));
     }
 
     final var foundUsages = usageRepository.findByDispenserId(this.dispenser.getId());

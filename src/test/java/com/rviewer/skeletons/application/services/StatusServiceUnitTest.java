@@ -31,7 +31,7 @@ public class StatusServiceUnitTest {
   @Test
   void itShouldThrowDispenserAlreadyOpenedExceptionWhenOpen() {
     final var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
-    dispenser.open(Optional.of(LocalDateTime.now()));
+    dispenser.open(LocalDateTime.now());
     when(dispenserRepository.findById(dispenser.getId())).thenReturn(Optional.of(dispenser));
 
     Assertions.assertThrows(
@@ -66,7 +66,7 @@ public class StatusServiceUnitTest {
   @Test
   void itShouldSaveClosedDispenserWhenClose() {
     final var dispenser = new Dispenser(BigDecimal.valueOf(0.5));
-    dispenser.open(Optional.of(LocalDateTime.now()));
+    dispenser.open(LocalDateTime.now());
     when(dispenserRepository.findById(dispenser.getId())).thenReturn(Optional.of(dispenser));
 
     service.close(dispenser.getId(), Optional.of(LocalDateTime.now()));
