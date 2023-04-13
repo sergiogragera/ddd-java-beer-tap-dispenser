@@ -11,7 +11,7 @@
   </parent>
   <groupId>com.rviewer.skeletons</groupId>
   <artifactId>beer-tap-dispenser</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.0</version>
   <name>beer-tap-dispenser</name>
   <description>Beer tap dispenser</description>
   <properties>
