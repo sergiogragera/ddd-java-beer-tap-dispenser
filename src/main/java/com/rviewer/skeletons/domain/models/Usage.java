@@ -6,6 +6,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -31,9 +32,12 @@ public class Usage {
 
   @Embedded private Status status;
 
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @JoinColumn(name = "dispenser_id", nullable = false)
   private Dispenser dispenser;
+
+  @Column(name = "dispenser_id")
+  private UUID dispenserId;
 
   protected Usage() {}
 

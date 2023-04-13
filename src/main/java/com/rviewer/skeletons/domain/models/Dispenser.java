@@ -5,10 +5,8 @@ import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyClosedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserClosedAfterOpenException;
 import com.rviewer.skeletons.domain.exceptions.DispenserOpenedAfterCloseException;
-import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -40,7 +38,7 @@ public class Dispenser extends AbstractAggregateRoot<Dispenser> {
 
   public Dispenser(BigDecimal flowVolume) {
     if (flowVolume.compareTo(BigDecimal.ZERO) <= 0) {
-      throw new InvalidArgumentException("invalid flow volume: must be greater than zero");
+      throw new IllegalArgumentException("flow volume must be greater than zero");
     }
     this.flowVolume = flowVolume;
   }
@@ -53,8 +51,10 @@ public class Dispenser extends AbstractAggregateRoot<Dispenser> {
     return this.status.isOpened();
   }
 
-  public void open(Optional<LocalDateTime> date) {
-    LocalDateTime openDate = date.orElse(LocalDateTime.now());
+  public void open(LocalDateTime openDate) {
+    if (openDate == null) {
+      throw new NullPointerException("open date must not be null");
+    }
     if (this.isOpened()) {
       throw new DispenserAlreadyOpenedException();
     } else if (this.status.isClosedAfter(openDate)) {
@@ -63,8 +63,10 @@ public class Dispenser extends AbstractAggregateRoot<Dispenser> {
     this.status = new Status(openDate);
   }
 
-  public Usage close(Optional<LocalDateTime> date) {
-    LocalDateTime closeDate = date.orElse(LocalDateTime.now());
+  public void close(LocalDateTime closeDate) {
+    if (closeDate == null) {
+      throw new NullPointerException("close date must not be null");
+    }
     if (!this.isOpened()) {
       throw new DispenserAlreadyClosedException();
     } else if (this.status.isOpenedAfter(closeDate)) {
@@ -72,7 +74,6 @@ public class Dispenser extends AbstractAggregateRoot<Dispenser> {
     }
     this.status = new Status(this.status.getOpenedAt(), closeDate);
     registerEvent(new DispenserClosedEvent(this));
-    return new Usage(this);
   }
 
   public BigDecimal getLitersDispensed() {

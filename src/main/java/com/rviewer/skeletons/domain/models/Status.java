@@ -1,6 +1,5 @@
 package com.rviewer.skeletons.domain.models;
 
-import com.rviewer.skeletons.domain.exceptions.InvalidArgumentException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import javax.persistence.Column;
@@ -24,7 +23,7 @@ public class Status {
     this.openedAt = openedAt;
     if (closedAt != null) {
       if (openedAt == null || !closedAt.isAfter(this.openedAt)) {
-        throw new InvalidArgumentException("close date before open");
+        throw new IllegalArgumentException("close date before open");
       }
       this.closedAt = closedAt;
     }

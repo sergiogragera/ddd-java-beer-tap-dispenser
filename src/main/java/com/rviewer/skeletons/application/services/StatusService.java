@@ -17,7 +17,7 @@ public class StatusService {
   public void open(UUID id, Optional<LocalDateTime> updatedAt) {
     Dispenser dispenser =
         dispenserRepository.findById(id).orElseThrow(() -> new DispenserNotFoundException());
-    dispenser.open(updatedAt);
+    dispenser.open(updatedAt.orElse(LocalDateTime.now()));
     dispenserRepository.save(dispenser);
   }
 
@@ -25,7 +25,7 @@ public class StatusService {
   public void close(UUID id, Optional<LocalDateTime> updatedAt) {
     Dispenser dispenser =
         dispenserRepository.findById(id).orElseThrow(() -> new DispenserNotFoundException());
-    dispenser.close(updatedAt);
+    dispenser.close(updatedAt.orElse(LocalDateTime.now()));
     dispenserRepository.save(dispenser);
   }
 }

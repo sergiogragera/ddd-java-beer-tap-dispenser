@@ -1,4 +1,4 @@
-package com.rviewer.skeletons.domain.listeners;
+package com.rviewer.skeletons.application.handlers;
 
 import com.rviewer.skeletons.domain.events.DispenserClosedEvent;
 import com.rviewer.skeletons.domain.models.Usage;
@@ -9,7 +9,7 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
-public class DispenserClosedListener {
+public class DispenserClosedHandler {
   @Autowired UsageRepository usageRepository;
 
   @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
