@@ -1,7 +1,37 @@
 version: '3'
 services:
-  java-skeleton-api:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    java-skeleton-api:
+        image: openjdk:11
+        container_name: java-skeleton-api
+        depends_on:
+            -   postgres-skeleton-db
+        volumes:
+            -   "${PWD}:/home/maven/project"
+            -   "rv-maven-cache:/root/.m2"
+        working_dir: "/home/maven/project"
+        ports:
+            -   "8080:8080"
+        networks:
+            internal-net:
+
+    postgres-skeleton-db:
+        container_name: postgres-skeleton-db
+        image: postgres:13.4-alpine
+        restart: on-failure
+        volumes:
+            - rv-volume:/var/lib/postgresql/data
+        env_file:
+            - postgres.dev.env
+        ports:
+            -   "15432:5432"
+        networks:
+            internal-net:
+
+volumes:
+    rv-volume:
+    rv-maven-cache:
+
+networks:
+    internal-net:
+        name: rv-skeleton-net
  
