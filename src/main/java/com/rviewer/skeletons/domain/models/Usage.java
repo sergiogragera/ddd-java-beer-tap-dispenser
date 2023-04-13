@@ -39,10 +39,10 @@ public class Usage {
   protected Usage() {}
 
   public Usage(Dispenser dispenser) {
-    this.dispenser = dispenser;
-    if (dispenser.getStatus() == null) {
-      throw new NullPointerException("dispenser must have status");
+    if (dispenser == null) {
+      throw new NullPointerException("dispenser must not be null");
     }
+    this.dispenser = dispenser;
     if (dispenser.getStatus().getOpenedAt() == null
         || dispenser.getStatus().getClosedAt() == null) {
       throw new IllegalArgumentException("dispenser must have closed status");

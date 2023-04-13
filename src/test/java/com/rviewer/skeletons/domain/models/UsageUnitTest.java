@@ -10,6 +10,15 @@ import org.junit.jupiter.api.Test;
 
 public class UsageUnitTest {
   @Test
+  public void itShouldThrowNNullPointerExceptionWhenDispenserIsNull() {
+    assertThrows(
+        NullPointerException.class,
+        () -> {
+          new Usage(null);
+        });
+  }
+
+  @Test
   public void itShouldThrowIllegalArgumentExceptionWhenDispenserIsNotClosed() {
     assertThrows(
         IllegalArgumentException.class,

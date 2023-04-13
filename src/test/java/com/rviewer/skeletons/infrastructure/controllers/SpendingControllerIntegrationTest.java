@@ -39,7 +39,7 @@ public class SpendingControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound());
   }
-  
+
   @Test
   public void itShouldReturnSpendings() throws Exception {
     final var id = UUID.randomUUID();

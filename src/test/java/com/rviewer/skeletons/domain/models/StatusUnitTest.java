@@ -14,11 +14,20 @@ public class StatusUnitTest {
   final LocalDateTime minutesAgo = now.minusMinutes(15);
 
   @Test
-  public void itShouldThrowIllegalArgumentExceptionWhenDispenserIsNotClosed() {
+  public void itShouldThrowIllegalArgumentExceptionWhenCloseIsAfterOpen() {
     assertThrows(
         IllegalArgumentException.class,
         () -> {
           new Status(now, secondsAgo);
+        });
+  }
+
+  @Test
+  public void itShouldThrowIllegalArgumentExceptionWhenCloseButNotOpen() {
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> {
+          new Status(null, secondsAgo);
         });
   }
 
