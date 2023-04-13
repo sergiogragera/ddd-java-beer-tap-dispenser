@@ -15,17 +15,21 @@ public class StatusService {
   @Autowired DispenserRepository dispenserRepository;
 
   public void open(UUID id, Optional<LocalDateTime> updatedAt) {
-    Dispenser dispenser =
-        dispenserRepository.findById(id).orElseThrow(() -> new DispenserNotFoundException());
-    dispenser.open(updatedAt.orElse(LocalDateTime.now()));
-    dispenserRepository.save(dispenser);
+    synchronized (id.toString()) {
+      Dispenser dispenser =
+          dispenserRepository.findById(id).orElseThrow(() -> new DispenserNotFoundException());
+      dispenser.open(updatedAt.orElse(LocalDateTime.now()));
+      dispenserRepository.save(dispenser);
+    }
   }
 
   @Transactional
   public void close(UUID id, Optional<LocalDateTime> updatedAt) {
-    Dispenser dispenser =
-        dispenserRepository.findById(id).orElseThrow(() -> new DispenserNotFoundException());
-    dispenser.close(updatedAt.orElse(LocalDateTime.now()));
-    dispenserRepository.save(dispenser);
+    synchronized (id.toString()) {
+      Dispenser dispenser =
+          dispenserRepository.findById(id).orElseThrow(() -> new DispenserNotFoundException());
+      dispenser.close(updatedAt.orElse(LocalDateTime.now()));
+      dispenserRepository.save(dispenser);
+    }
   }
 }
