@@ -1,9 +1,7 @@
 package com.rviewer.skeletons.domain.events;
 
-import java.time.LocalDateTime;
-
 import com.rviewer.skeletons.domain.models.Dispenser;
-
+import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
