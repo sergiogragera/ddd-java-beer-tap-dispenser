@@ -2,9 +2,9 @@ package com.rviewer.skeletons.domain.events;
 
 import com.rviewer.skeletons.domain.models.Dispenser;
 
-public class DispenserClosedEvent extends DispenserEvent {
+public class DispenserCreatedEvent extends DispenserEvent {
 
-  public DispenserClosedEvent(Dispenser dispenser) {
+  public DispenserCreatedEvent(Dispenser dispenser) {
     super(dispenser);
   }
 }

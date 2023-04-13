@@ -1,6 +1,8 @@
 package com.rviewer.skeletons.domain.models;
 
 import com.rviewer.skeletons.domain.events.DispenserClosedEvent;
+import com.rviewer.skeletons.domain.events.DispenserCreatedEvent;
+import com.rviewer.skeletons.domain.events.DispenserOpenedEvent;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyClosedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserAlreadyOpenedException;
 import com.rviewer.skeletons.domain.exceptions.DispenserClosedAfterOpenException;
@@ -41,6 +43,7 @@ public class Dispenser extends AbstractAggregateRoot<Dispenser> {
       throw new IllegalArgumentException("flow volume must be greater than zero");
     }
     this.flowVolume = flowVolume;
+    registerEvent(new DispenserCreatedEvent(this));
   }
 
   public BigDecimal getFlowVolume() {
@@ -61,6 +64,7 @@ public class Dispenser extends AbstractAggregateRoot<Dispenser> {
       throw new DispenserClosedAfterOpenException();
     }
     this.status = new Status(openDate);
+    registerEvent(new DispenserOpenedEvent(this));
   }
 
   public void close(LocalDateTime closeDate) {
