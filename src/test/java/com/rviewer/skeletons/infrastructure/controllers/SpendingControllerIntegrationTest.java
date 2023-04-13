@@ -1,5 +1,6 @@
 package com.rviewer.skeletons.infrastructure.controllers;
 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -7,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.rviewer.skeletons.application.services.SpendingService;
 import com.rviewer.skeletons.domain.dtos.response.SpendingResponse;
 import com.rviewer.skeletons.domain.dtos.response.UsageResponse;
+import com.rviewer.skeletons.domain.exceptions.DispenserNotFoundException;
 import com.rviewer.skeletons.domain.models.Dispenser;
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -25,6 +28,18 @@ public class SpendingControllerIntegrationTest {
 
   @MockBean private SpendingService service;
 
+  @Test
+  public void itShouldReturnNotFoundWhenDispenserNotExists() throws Exception {
+    final var dispenserId = UUID.randomUUID();
+    doThrow(DispenserNotFoundException.class).when(service).getSpendings(dispenserId);
+
+    mockMvc
+        .perform(
+            get(String.format("/dispenser/%s/spendings", dispenserId))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound());
+  }
+  
   @Test
   public void itShouldReturnSpendings() throws Exception {
     final var id = UUID.randomUUID();
