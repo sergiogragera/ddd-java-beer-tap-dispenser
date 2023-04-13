@@ -33,14 +33,14 @@ sure:
 
 .PHONY: docker
 docker:
-	@git archive --format=tar.gz HEAD | docker build -f Dockerfile.${DOCKER_TAG} -t cabify/car-pooling:$(DOCKER_TAG) -
+	@git archive --format=tar.gz HEAD | docker build -t rviewer/beer-tap-dispenser:$(DOCKER_TAG) -
 
 .PHONY: run-docker
 run-docker:
 	@docker run \
 		--rm \
 		-p 8080:8080 \
-		--name car-pooling \
-		cabify/car-pooling:$(DOCKER_TAG)
+		--name beer-tap-dispenser \
+		rviewer/beer-tap-dispenser:$(DOCKER_TAG)
 
 DOCKER_TAG = dev
